@@ -1,0 +1,23 @@
+﻿{
+    "version": "0.1.0",
+    "description": "GoSharp Class Library",
+    "authors": [ "Krisztián Pócza" ],
+    "tags": [ "Go language DSL channel select GoSharp" ],
+    "projectUrl": "https://github.com/kpocza/gosharp",
+    "licenseUrl": "",
+    "summary": "Support for Go-like concurrency patterns in C#/.NET. Channels, selects, etc.",
+
+    "frameworks": {
+        "net451": { },
+        "dnxcore50": {
+            "dependencies": {
+                "Microsoft.CSharp": "4.0.1-beta-23516",
+                "System.Collections": "4.0.11-beta-23516",
+                "System.Linq": "4.0.1-beta-23516",
+                "System.Runtime": "4.0.21-beta-23516",
+                "System.Threading": "4.0.11-beta-23516",
+                "System.Threading.Thread": "4.0.0-beta-23516"
+            }
+        }
+    }
+}
