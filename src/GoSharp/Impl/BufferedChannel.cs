@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using Go.Infra;
 
 namespace Go.Impl
@@ -14,12 +15,31 @@ namespace Go.Impl
 
         public void Send(T message)
         {
-            _queue.Enqueue(message);
+            try
+            {
+                _queue.Enqueue(message);
+            }
+            catch (QueueStoppedException)
+            {
+                throw new ChannelClosedException();
+            }
         }
 
         public T Recv()
         {
-            return _queue.Dequeue();
+            try
+            {
+                return _queue.Dequeue();
+            }
+            catch (QueueStoppedException)
+            {
+                throw new ChannelClosedException();
+            }
+        }
+
+        public void Close()
+        {
+            _queue.Stop();
         }
 
         public object SelectRecvPrepare()

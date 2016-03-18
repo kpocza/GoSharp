@@ -9,11 +9,15 @@ namespace Go.Impl
     {
         private List<ChannelAction> _channelActions;
         private readonly Action _defaultAction;
+        private readonly TimeSpan _timeout;
+        private readonly Action _timeoutAction;
 
-        internal SelectImpl(List<ChannelAction> channelActions, Action defaultAction)
+        internal SelectImpl(List<ChannelAction> channelActions, Action defaultAction, TimeSpan timeout, Action timeoutAction)
         {
             _channelActions = channelActions;
             _defaultAction = defaultAction;
+            _timeout = timeout;
+            _timeoutAction = timeoutAction;
         }
 
         internal void Go()
@@ -26,10 +30,7 @@ namespace Go.Impl
             PrepareSelectCases();
 
             var waitHandles =_channelActions.Select(ca => ca.GetWaitHandle()).ToArray();
-
-            var waitIndex = _defaultAction == null
-                ? WaitHandle.WaitAny(waitHandles)
-                : WaitHandle.WaitAny(waitHandles, 0);
+            var waitIndex = Wait(waitHandles);
 
             var result = FinalizeSelectCases(waitHandles, waitIndex);
 
@@ -39,8 +40,35 @@ namespace Go.Impl
             }
             else
             {
-                _defaultAction?.Invoke();
+                if (HasDefaultAction)
+                {
+                    _defaultAction.Invoke();
+                }
+
+                if(HasTimeout)
+                {
+                    _timeoutAction.Invoke();
+                }
             }
+        }
+
+        private int Wait(WaitHandle[] waitHandles)
+        {
+            int waitIndex = -1;
+
+            if (!HasDefaultAction && !HasTimeout)
+            {
+                waitIndex = WaitHandle.WaitAny(waitHandles);
+            }
+            else if (HasDefaultAction && !HasTimeout)
+            {
+                waitIndex = WaitHandle.WaitAny(waitHandles, 0);
+            }
+            else if (!HasDefaultAction && HasTimeout)
+            {
+                waitIndex = WaitHandle.WaitAny(waitHandles, _timeout);
+            }
+            return waitIndex;
         }
 
         private void Shuffle()
@@ -93,5 +121,8 @@ namespace Go.Impl
             var channelAction = _channelActions[waitIndex] as RecvChannelAction;
             channelAction?.Action.Invoke(channelAction.Target, new[] {result});
         }
+
+        private bool HasDefaultAction => _defaultAction != null;
+        private bool HasTimeout => _timeoutAction != null;
     }
 }

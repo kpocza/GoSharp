@@ -9,6 +9,8 @@ namespace Go.Impl
         void Send(T message);
         T Recv();
 
+        void Close();
+        
         #endregion
 
         #region Select Recv

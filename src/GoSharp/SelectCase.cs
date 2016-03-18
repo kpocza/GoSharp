@@ -9,6 +9,8 @@ namespace Go
     {
         private readonly List<ChannelAction> _channelActions;
         private Action _defaultAction;
+        private TimeSpan _timeout;
+        private Action _timeoutAction;
 
         internal SelectCase()
         {
@@ -65,14 +67,28 @@ namespace Go
         {
             if(defaultAction == null)
                 throw new ArgumentNullException(nameof(defaultAction));
+            if(_timeoutAction!= null)
+                throw new SelectTimeoutOrDefaultException();
 
             _defaultAction = defaultAction;
             Go();
         }
 
+        public void Timeout(TimeSpan timeout, Action timeoutAction)
+        {
+            if(timeoutAction == null)
+                throw new ArgumentNullException(nameof(timeoutAction));
+            if (_defaultAction != null)
+                throw new SelectTimeoutOrDefaultException();
+
+            _timeoutAction = timeoutAction;
+            _timeout = timeout;
+            Go();
+        }
+
         public void Go()
         {
-            var selectImpl = new SelectImpl(_channelActions, _defaultAction);
+            var selectImpl = new SelectImpl(_channelActions, _defaultAction, _timeout, _timeoutAction);
             selectImpl.Go();
         }
 

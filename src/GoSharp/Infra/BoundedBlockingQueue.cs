@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using Go.Impl;
 
 namespace Go.Infra
 {
@@ -10,24 +9,26 @@ namespace Go.Infra
         private readonly Queue<T> _queue;
         private Semaphore _itemsAvailable;
         private Semaphore _spaceAvailable;
+        private ManualResetEvent _stoppedEvent;
 
         internal BoundedBlockingQueue(int size)
         {
             _itemsAvailable = new Semaphore(0, size);
             _spaceAvailable = new Semaphore(size, size);
             _queue = new Queue<T>(size);
+            _stoppedEvent = new ManualResetEvent(false);
         }
 
         internal void Enqueue(T data)
         {
-            _spaceAvailable.WaitOne();
+            WaitOrClose(_spaceAvailable);
 
             PreAssuredEnqueue(data);
         }
 
         internal T Enqueue(Func<T> func)
         {
-            _spaceAvailable.WaitOne();
+            WaitOrClose(_spaceAvailable);
 
             T item;
             lock (_queue)
@@ -42,7 +43,7 @@ namespace Go.Infra
 
         internal T Dequeue()
         {
-            _itemsAvailable.WaitOne();
+            WaitOrClose(_itemsAvailable);
 
             return PreAssuredDequeue();
         }
@@ -99,6 +100,19 @@ namespace Go.Infra
                 _itemsAvailable = null;
                 _spaceAvailable = null;
             }
+        }
+
+        public void Stop()
+        {
+            _stoppedEvent.Set();
+        }
+
+        private void WaitOrClose(Semaphore waitSemaphore)
+        {
+            int waitHandleIndex = WaitHandle.WaitAny(new WaitHandle[] {waitSemaphore, _stoppedEvent});
+
+            if(waitHandleIndex == 1)
+                throw new QueueStoppedException();
         }
 
         internal WaitHandle ItemAvailable => _itemsAvailable;

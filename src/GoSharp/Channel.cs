@@ -48,6 +48,7 @@ namespace Go
         public void Close()
         {
             Closed = true;
+            _impl.Close();
         }
 
         public static Channel<T> operator +(Channel<T> channel, T message)

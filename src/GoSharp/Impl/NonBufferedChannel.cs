@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using Go.Infra;
 
 namespace Go.Impl
@@ -6,10 +7,12 @@ namespace Go.Impl
     internal sealed class NonBufferedChannel<T> : IChannelImpl<T>
     {
         private readonly BoundedBlockingQueue<Passer<T>> _queue;
+        private readonly ManualResetEvent _closedEvent;
 
         internal NonBufferedChannel()
         {
             _queue = new BoundedBlockingQueue<Passer<T>>(1);
+            _closedEvent = new ManualResetEvent(false);
         }
 
         public void Send(T message)
@@ -17,30 +20,38 @@ namespace Go.Impl
             Passer<T> passer;
             do
             {
-                passer = _queue.Dequeue();
-                passer.Message = message;
-                Interlocked.MemoryBarrier();
                 try
                 {
-                    passer.Signal?.Set();
+                    passer = _queue.Dequeue();
                 }
-                catch
+                catch (QueueStoppedException)
                 {
+                    throw new ChannelClosedException();
                 }
-                if (passer.IsSelect)
-                {
-                    passer.SelectSignal.WaitOne();
-                    passer.SelectSignal.Dispose();
-                }
+                SendBody(passer, message);
             } while (passer.IsSelect && passer.SelectResult == SelectResult.NotSelected);
         }
 
         public T Recv()
         {
-            var passer = _queue.Enqueue(() => new Passer<T> {Signal = new AutoResetEvent(false), IsSelect = false});
-            passer.Signal.WaitOne();
+            Passer<T> passer;
+            try
+            {
+                passer = _queue.Enqueue(() => new Passer<T> {Signal = new AutoResetEvent(false), IsSelect = false});
+            }
+            catch(QueueStoppedException)
+            {
+                throw new ChannelClosedException();
+            }
+            WaitOrClosed(passer.Signal);
             passer.Signal.Dispose();
             return passer.Message;
+        }
+
+        public void Close()
+        {
+            _queue.Stop();
+            _closedEvent.Set();
         }
 
         public object SelectRecvPrepare()
@@ -92,7 +103,21 @@ namespace Go.Impl
         public void SelectSendChosen(object token, T item)
         {
             var passer = _queue.PreAssuredDequeue();
-            passer.Message = item;
+            SendBody(passer, item);
+        }
+
+        public void SelectSendNotChosen(object token)
+        {
+        }
+
+        public WaitHandle SelectSendGetItemAvailable(object token)
+        {
+            return _queue.ItemAvailable;
+        }
+
+        private void SendBody(Passer<T> passer, T message)
+        {
+            passer.Message = message;
             Interlocked.MemoryBarrier();
             try
             {
@@ -103,18 +128,16 @@ namespace Go.Impl
             }
             if (passer.IsSelect)
             {
-                passer.SelectSignal.WaitOne();
+                WaitOrClosed(passer.SelectSignal);
                 passer.SelectSignal.Dispose();
             }
         }
 
-        public void SelectSendNotChosen(object token)
+        private void WaitOrClosed(WaitHandle waitHandle)
         {
-        }
-
-        public WaitHandle SelectSendGetItemAvailable(object token)
-        {
-            return _queue.ItemAvailable;
+            int waitHandleindex = WaitHandle.WaitAny(new WaitHandle[] {waitHandle, _closedEvent});
+            if(waitHandleindex == 1)
+                throw new ChannelClosedException();
         }
 
         class Passer<TP>
