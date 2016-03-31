@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using Go.Impl;
 
@@ -49,6 +50,26 @@ namespace Go
         {
             Closed = true;
             _impl.Close();
+        }
+
+        public IEnumerable<T> Range
+        {
+            get
+            {
+                while (!Closed)
+                {
+                    T item;
+                    try
+                    {
+                        item = Recv();
+                    }
+                    catch (ChannelClosedException)
+                    {
+                        yield break;
+                    }
+                    yield return item;
+                }
+            }
         }
 
         public static Channel<T> operator +(Channel<T> channel, T message)
