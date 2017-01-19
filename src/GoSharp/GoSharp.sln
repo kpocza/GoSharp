@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{28EB7FF9-C30F-4277-9D8F-38C97D5D8D79}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2D1D84E9-52F0-48CD-A2BF-E5B0E3A62B3F}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+	EndProjectSection
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "GoSharp", "src\GoSharp\GoSharp.xproj", "{A6C53D36-98D9-416F-BD3B-1692ED030DFC}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "GoSharp.Test", "src\GoSharp.Test\GoSharp.Test.xproj", "{AB6D04C4-8558-4245-9ACE-0F01F2ACA260}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A6C53D36-98D9-416F-BD3B-1692ED030DFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6C53D36-98D9-416F-BD3B-1692ED030DFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6C53D36-98D9-416F-BD3B-1692ED030DFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6C53D36-98D9-416F-BD3B-1692ED030DFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB6D04C4-8558-4245-9ACE-0F01F2ACA260}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB6D04C4-8558-4245-9ACE-0F01F2ACA260}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB6D04C4-8558-4245-9ACE-0F01F2ACA260}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB6D04C4-8558-4245-9ACE-0F01F2ACA260}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A6C53D36-98D9-416F-BD3B-1692ED030DFC} = {28EB7FF9-C30F-4277-9D8F-38C97D5D8D79}
+		{AB6D04C4-8558-4245-9ACE-0F01F2ACA260} = {28EB7FF9-C30F-4277-9D8F-38C97D5D8D79}
+	EndGlobalSection
+EndGlobal
