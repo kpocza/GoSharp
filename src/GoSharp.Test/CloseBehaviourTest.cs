@@ -67,5 +67,36 @@ namespace GoSharp.Test
             startedEvent.WaitOne();
             Assert.ThrowsException<ChannelClosedException>(() => channel.Recv());
         }
+
+        [TestMethod]
+        public void SelectSendWhileCloseTest()
+        {
+            var channel = Channel<int>.CreateNonBuffered();
+            var startedEvent = new AutoResetEvent(false);
+            new Thread(() =>
+            {
+                startedEvent.Set();
+                Thread.Sleep(10);
+                channel.Close();
+            }).Start();
+            startedEvent.WaitOne();
+            Select.CaseSend(channel, 1);
+        }
+
+        [TestMethod]
+        public void SelectRecvWhileCloseTest()
+        {
+            var channel = Channel<int>.CreateNonBuffered();
+            var startedEvent = new AutoResetEvent(false);
+            new Thread(() =>
+            {
+                startedEvent.Set();
+                Thread.Sleep(10);
+                channel.Close();
+            }).Start();
+            startedEvent.WaitOne();
+            Select.CaseRecv(channel, (a) => { });
+        }
+
     }
 }

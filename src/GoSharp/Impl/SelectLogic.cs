@@ -113,7 +113,7 @@ namespace GoSharp.Impl
 
         private void LockAllChannels()
         {
-            foreach (var channelOperation in _channelOperations)
+            foreach (var channelOperation in _channelOperations.OrderBy(c => c.Channel.Uid))
             {
                 channelOperation.Channel.Lock();
             }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Tracing;
 using System.Linq;
 using System.Threading;
 
@@ -13,11 +12,15 @@ namespace GoSharp.Impl
         private readonly object _lockObj;
         private readonly int _queueSize;
         private readonly Queue<object> _msgQueue;
+        private static int _globalUidCounter = 0;
+        protected readonly int _uid;
 
         private volatile bool _isClosed;
 
         internal ChannelBase(int queueSize)
         {
+            _uid = Interlocked.Increment(ref _globalUidCounter);
+
             _readerQueue = new TransferQueue();
             _writerQueue = new TransferQueue();
             _lockObj = new object();
@@ -30,6 +33,8 @@ namespace GoSharp.Impl
 
             _isClosed = false;
         }
+
+        public int Uid => _uid;
 
         protected bool SendCore(object msg)
         {
@@ -152,7 +157,6 @@ namespace GoSharp.Impl
                 tqi.ChannelOperation.Notify();
             }
 
-            // TODO: graceful operations
             Unlock();
         }
 

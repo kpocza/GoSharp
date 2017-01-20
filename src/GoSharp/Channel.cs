@@ -7,7 +7,6 @@ namespace GoSharp
     {
         private Channel(int queueSize) : base(queueSize)
         {
-            
         } 
 
         public static Channel<T> CreateNonBuffered()
