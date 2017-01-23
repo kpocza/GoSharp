@@ -3,13 +3,19 @@ using System.Threading.Tasks;
 
 namespace GoSharp.Impl
 {
+    // based on https://blogs.msdn.microsoft.com/pfxteam/2012/02/11/building-async-coordination-primitives-part-2-asyncautoresetevent/
     internal class AsyncAutoResetEvent
     {
         private static readonly Task Completed = Task.FromResult(true);
         private readonly Queue<TaskCompletionSource<bool>> _waits = new Queue<TaskCompletionSource<bool>>();
-        private bool _signaled;
+        private volatile bool _signaled;
 
-        internal Task WaitAsync()
+        internal AsyncAutoResetEvent(bool signaled)
+        {
+            _signaled = signaled;
+        }
+
+        internal Task WaitOneAsync()
         {
             lock (_waits)
             {
@@ -33,7 +39,7 @@ namespace GoSharp.Impl
             {
                 if (_waits.Count > 0)
                     toRelease = _waits.Dequeue();
-                else if (!_signaled)
+                else
                     _signaled = true;
             }
 

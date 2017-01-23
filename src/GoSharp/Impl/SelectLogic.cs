@@ -2,21 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
+using System.Threading.Tasks;
 
 namespace GoSharp.Impl
 {
     internal sealed class SelectLogic
     {
         private readonly List<ChannelOperation> _channelOperations;
-        private readonly AutoResetEvent _evt;
+        private readonly AsyncAutoResetEvent _evt;
         private readonly SelectFireContext _selectFireContext;
         private Action _defaultAction;
 
         internal SelectLogic()
         {
             _channelOperations = new List<ChannelOperation>();
-            _evt = new AutoResetEvent(false);
+            _evt = new AsyncAutoResetEvent(false);
             _selectFireContext = new SelectFireContext();
         }
 
@@ -33,6 +33,11 @@ namespace GoSharp.Impl
         }
 
         internal void Go()
+        {
+            GoAsync().Wait();
+        }
+
+        internal async Task GoAsync()
         {
             Shuffle();
 
@@ -85,20 +90,20 @@ namespace GoSharp.Impl
                     var recvChannelOperation = (RecvChannelOperation)channelOperation;
                     var channel = channelOperation.Channel;
 
-                    channel.Enqueue(recvChannelOperation, _selectFireContext, _evt);
+                    channel.Enqueue(recvChannelOperation, _selectFireContext);
                 }
                 else
                 {
                     var sendChannelOperation = (SendChannelOperation)channelOperation;
                     var channel = channelOperation.Channel;
 
-                    channel.Enqueue(sendChannelOperation, _selectFireContext, _evt);
+                    channel.Enqueue(sendChannelOperation, _selectFireContext);
                 }
             }
 
             UnlockAllChannels();
 
-            _evt.WaitOne();
+            await _evt.WaitOneAsync();
 
             // TODO: handle closure, timeout
 
@@ -113,7 +118,7 @@ namespace GoSharp.Impl
 
         private void LockAllChannels()
         {
-            foreach (var channelOperation in _channelOperations.OrderBy(c => c.Channel.Uid))
+            foreach (var channelOperation in _channelOperations.OrderBy(c => c.Channel.Id))
             {
                 channelOperation.Channel.Lock();
             }

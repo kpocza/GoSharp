@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using GoSharp.Impl;
 
 namespace GoSharp
@@ -36,9 +37,20 @@ namespace GoSharp
             Go();
         }
 
+        public async Task DefaultAsync(Action defaultAction)
+        {
+            _selectLogic.AddDefault(defaultAction);
+            await GoAsync();
+        }
+
         public void Go()
         {
             _selectLogic.Go();
+        }
+
+        public async Task GoAsync()
+        {
+            await _selectLogic.GoAsync();
         }
     }
 }

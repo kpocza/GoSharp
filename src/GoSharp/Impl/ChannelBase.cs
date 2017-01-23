@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace GoSharp.Impl
 {
@@ -12,14 +13,14 @@ namespace GoSharp.Impl
         private readonly object _lockObj;
         private readonly int _queueSize;
         private readonly Queue<object> _msgQueue;
-        private static int _globalUidCounter = 0;
-        protected readonly int _uid;
+        private static int _globalIdCounter = 0;
+        protected readonly int _id;
 
         private volatile bool _isClosed;
 
         internal ChannelBase(int queueSize)
         {
-            _uid = Interlocked.Increment(ref _globalUidCounter);
+            _id = Interlocked.Increment(ref _globalIdCounter);
 
             _readerQueue = new TransferQueue();
             _writerQueue = new TransferQueue();
@@ -34,9 +35,9 @@ namespace GoSharp.Impl
             _isClosed = false;
         }
 
-        public int Uid => _uid;
+        internal int Id => _id;
 
-        protected bool SendCore(object msg)
+        protected async Task<bool> SendCoreAsync(object msg)
         {
             Lock();
 
@@ -63,13 +64,13 @@ namespace GoSharp.Impl
                 return true;
             }
 
-            var evt = new AutoResetEvent(false);
+            var evt = new AsyncAutoResetEvent(false);
             var sendOperation = new SendChannelOperation(this, evt, msg);
             _writerQueue.Enqueue(new TransferQueueItem(sendOperation));
 
             Unlock();
 
-            evt.WaitOne();
+            await evt.WaitOneAsync();
 
             if (_isClosed)
             {
@@ -79,7 +80,7 @@ namespace GoSharp.Impl
             return true;
         }
 
-        protected object RecvCore()
+        protected async Task<object> RecvCoreAsync()
         {
             Lock();
 
@@ -108,13 +109,13 @@ namespace GoSharp.Impl
                 return msg;
             }
 
-            var evt = new AutoResetEvent(false);
+            var evt = new AsyncAutoResetEvent(false);
             var recvOperation = new RecvChannelOperation(this, evt);
             _readerQueue.Enqueue(new TransferQueueItem(recvOperation));
 
             Unlock();
 
-            evt.WaitOne();
+            await evt.WaitOneAsync();
 
             if (_isClosed)
             {
@@ -122,6 +123,31 @@ namespace GoSharp.Impl
             }
 
             return recvOperation.Msg;
+        }
+
+
+        protected bool SendCore(object msg)
+        {
+            try
+            {
+                return SendCoreAsync(msg).Result;
+            }
+            catch (AggregateException aggregateException)
+            {
+                throw aggregateException.InnerExceptions[0];
+            }
+        }
+
+        protected object RecvCore()
+        {
+            try
+            {
+                return RecvCoreAsync().Result;
+            }
+            catch (AggregateException aggregateException)
+            {
+                throw aggregateException.InnerExceptions[0];
+            }
         }
 
         protected IEnumerable<object> RangeCore()
@@ -211,7 +237,7 @@ namespace GoSharp.Impl
             return false;
         }
 
-        internal void Enqueue(ChannelOperation channelOperation, SelectFireContext selectFireContext, AutoResetEvent evt)
+        internal void Enqueue(ChannelOperation channelOperation, SelectFireContext selectFireContext)
         {
             if (channelOperation is RecvChannelOperation)
             {

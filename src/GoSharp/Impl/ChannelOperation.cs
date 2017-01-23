@@ -1,6 +1,4 @@
-﻿using System.Threading;
-
-namespace GoSharp.Impl
+﻿namespace GoSharp.Impl
 {
     internal abstract class ChannelOperation
     {
@@ -8,9 +6,9 @@ namespace GoSharp.Impl
 
         protected readonly object _target;
 
-        protected readonly AutoResetEvent _evt;
+        protected readonly AsyncAutoResetEvent _evt;
 
-        internal ChannelOperation(ChannelBase channel, AutoResetEvent evt,  object target)
+        internal ChannelOperation(ChannelBase channel, AsyncAutoResetEvent evt,  object target)
         {
             Channel = channel;
             _evt = evt;

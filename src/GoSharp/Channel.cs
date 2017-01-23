@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using GoSharp.Impl;
 
 namespace GoSharp
@@ -27,6 +28,16 @@ namespace GoSharp
         public T Recv()
         {
             return (T) RecvCore();
+        }
+
+        public async Task<bool> SendAsync(T msg)
+        {
+            return await SendCoreAsync(msg);
+        }
+
+        public async Task<T> RecvAsync()
+        {
+            return (T)await RecvCoreAsync();
         }
 
         public IEnumerable<T> Range
