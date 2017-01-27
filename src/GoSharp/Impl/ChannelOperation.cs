@@ -6,9 +6,9 @@
 
         protected readonly object _target;
 
-        protected readonly AsyncAutoResetEvent _evt;
+        protected readonly CompletionEvent _evt;
 
-        internal ChannelOperation(ChannelBase channel, AsyncAutoResetEvent evt,  object target)
+        internal ChannelOperation(ChannelBase channel, CompletionEvent evt,  object target)
         {
             Channel = channel;
             _evt = evt;
@@ -17,7 +17,7 @@
 
         internal void Notify()
         {
-            _evt.Set();
+            _evt.Notify();
         }
     }
 }

@@ -9,14 +9,14 @@ namespace GoSharp.Impl
     internal sealed class SelectLogic
     {
         private readonly List<ChannelOperation> _channelOperations;
-        private readonly AsyncAutoResetEvent _evt;
+        private readonly CompletionEvent _evt;
         private readonly SelectFireContext _selectFireContext;
         private Action _defaultAction;
 
         internal SelectLogic()
         {
             _channelOperations = new List<ChannelOperation>();
-            _evt = new AsyncAutoResetEvent(false);
+            _evt = new CompletionEvent();
             _selectFireContext = new SelectFireContext();
         }
 
@@ -85,6 +85,9 @@ namespace GoSharp.Impl
 
             foreach (var channelOperation in _channelOperations)
             {
+                if (channelOperation.Channel.IsClosed)
+                    continue;
+
                 if (channelOperation is RecvChannelOperation)
                 {
                     var recvChannelOperation = (RecvChannelOperation)channelOperation;
@@ -102,8 +105,10 @@ namespace GoSharp.Impl
             }
 
             UnlockAllChannels();
+            if (_channelOperations.All(c => c.Channel.IsClosed))
+                throw new ChannelClosedException();
 
-            await _evt.WaitOneAsync();
+            await _evt.WaitAsync();
 
             // TODO: handle closure, timeout
 

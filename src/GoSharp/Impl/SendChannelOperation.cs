@@ -4,7 +4,7 @@
     {
         internal object Msg { get; private set; }
 
-        internal SendChannelOperation(ChannelBase channel, AsyncAutoResetEvent evt, object msg) : base(channel, evt, null)
+        internal SendChannelOperation(ChannelBase channel, CompletionEvent evt, object msg) : base(channel, evt, null)
         {
             Msg = msg;
         }

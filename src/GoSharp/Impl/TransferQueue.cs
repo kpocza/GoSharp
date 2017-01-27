@@ -1,16 +1,15 @@
-﻿using System.Collections.Concurrent;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading;
 
 namespace GoSharp.Impl
 {
     internal class TransferQueue
     {
-        private readonly ConcurrentQueue<TransferQueueItem> _transferQueue;
+        private readonly Queue<TransferQueueItem> _transferQueue;
 
         internal TransferQueue()
         {
-            _transferQueue = new ConcurrentQueue<TransferQueueItem>();
+            _transferQueue = new Queue<TransferQueueItem>(100);
         }
 
         internal void Enqueue(TransferQueueItem transferQueueItem)
@@ -20,11 +19,12 @@ namespace GoSharp.Impl
 
         internal bool TryDequeue(out TransferQueueItem transferQueueItem)
         {
-            TransferQueueItem tqi;
             transferQueueItem = null;
 
-            while (_transferQueue.TryDequeue(out tqi))
+            while (_transferQueue.Count > 0)
             {
+                var tqi = _transferQueue.Dequeue();
+
                 if (tqi.SelectFireContext == null ||
                     Interlocked.CompareExchange(ref tqi.SelectFireContext.Fired, tqi, null) == null)
                 {
@@ -35,7 +35,5 @@ namespace GoSharp.Impl
 
             return false;
         }
-
-        internal bool HasItem => _transferQueue.Any();
     }
 }

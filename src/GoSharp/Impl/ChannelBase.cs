@@ -39,13 +39,10 @@ namespace GoSharp.Impl
 
         protected async Task<bool> SendCoreAsync(object msg)
         {
-            Lock();
-
             if (_isClosed)
-            {
-                Unlock();
                 throw new ChannelClosedException();
-            }
+
+            Lock();
 
             TransferQueueItem readerQueueItem;
             if (_readerQueue.TryDequeue(out readerQueueItem))
@@ -64,31 +61,26 @@ namespace GoSharp.Impl
                 return true;
             }
 
-            var evt = new AsyncAutoResetEvent(false);
+            var evt = new CompletionEvent();
             var sendOperation = new SendChannelOperation(this, evt, msg);
             _writerQueue.Enqueue(new TransferQueueItem(sendOperation));
 
             Unlock();
 
-            await evt.WaitOneAsync();
+            await evt.WaitAsync();
 
             if (_isClosed)
-            {
                 throw new ChannelClosedException();
-            }
 
             return true;
         }
 
         protected async Task<object> RecvCoreAsync()
         {
-            Lock();
-
             if (_isClosed)
-            {
-                Unlock();
                 throw new ChannelClosedException();
-            }
+
+            Lock();
 
             TransferQueueItem writerQueueItem;
             if (_writerQueue.TryDequeue(out writerQueueItem))
@@ -109,18 +101,16 @@ namespace GoSharp.Impl
                 return msg;
             }
 
-            var evt = new AsyncAutoResetEvent(false);
+            var evt = new CompletionEvent();
             var recvOperation = new RecvChannelOperation(this, evt);
             _readerQueue.Enqueue(new TransferQueueItem(recvOperation));
 
             Unlock();
 
-            await evt.WaitOneAsync();
+            await evt.WaitAsync();
 
             if (_isClosed)
-            {
                 throw new ChannelClosedException();
-            }
 
             return recvOperation.Msg;
         }
