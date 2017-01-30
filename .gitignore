@@ -30,4 +30,6 @@ _NCrunch_*
 *.ncrunchsolution
 **/nCrunchTemp_*
 
+go/*.exe
+
 .*.swp
