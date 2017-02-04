@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -125,6 +126,21 @@ namespace GoSharp.Test
 
             items.Sort();
             Assert.IsTrue(Enumerable.Range(1, 100000).SequenceEqual(items));
+        }
+
+        [TestMethod]
+        public void ChannelNegativeQueueSizeTest()
+        {
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => Channel<int>.CreateBuffered(-1));
+        }
+
+        [TestMethod]
+        public void ChannelLargeQueueSizeTest()
+        {
+            int upperLimit = 10000;
+            var channel = Channel<int>.CreateBuffered(upperLimit);
+
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => Channel<int>.CreateBuffered(upperLimit + 1));
         }
     }
 }

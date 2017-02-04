@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GoSharp.Test
@@ -95,6 +96,24 @@ namespace GoSharp.Test
 
             items.Sort();
             Assert.IsTrue(Enumerable.Range(1, 100000).SequenceEqual(items));
+        }
+
+        [TestMethod]
+        public async Task ChannelSendRecvTestAsync()
+        {
+            var channel = Channel<int>.CreateNonBuffered();
+            var done = Channel<bool>.CreateNonBuffered();
+
+            int i = 2;
+            Go.Run(async () =>
+            {
+                i = await channel.RecvAsync();
+                await done.SendAsync(true);
+            });
+            await channel.SendAsync(1);
+            await done.RecvAsync();
+
+            Assert.AreEqual(1, i);
         }
     }
 }

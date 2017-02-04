@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GoSharp.Test
@@ -349,6 +351,21 @@ namespace GoSharp.Test
         }
 
         #endregion
+
+        #endregion
+
+        #region Input validation tests
+        [TestMethod]
+        public void SelectNullDefaultActionTest()
+        {
+            Assert.ThrowsException<ArgumentNullException>(() => Select.CaseSend(Channel<string>.CreateNonBuffered(), "a").Default(null));
+        }
+
+        [TestMethod]
+        public async Task SelectNullDefaultAsyncActionTest()
+        {
+            await Assert.ThrowsExceptionAsync<ArgumentNullException>(async () => await Select.CaseSend(Channel<string>.CreateNonBuffered(), "a").DefaultAsync(null));
+        }
 
         #endregion
     }

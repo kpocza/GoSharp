@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using GoSharp.Impl;
 
 namespace GoSharp
 {
-    public class Channel<T> : ChannelBase
+    public sealed class Channel<T> : ChannelBase, ISendChannel<T>, IRecvChannel<T>
     {
         private Channel(int queueSize) : base(queueSize)
         {
@@ -17,6 +18,9 @@ namespace GoSharp
 
         public static Channel<T> CreateBuffered(int queueSize)
         {
+            if(queueSize < 0 || queueSize > 10000)
+                throw new ArgumentOutOfRangeException(nameof(queueSize));
+
             return new Channel<T>(queueSize);
         }
 

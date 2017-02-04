@@ -22,12 +22,18 @@ namespace GoSharp.Impl
 
         internal void AddRecv<T>(Channel<T> channel, Action<T> action)
         {
+            if(_channelOperations.Any(co => co.Channel == channel))
+                throw new InvalidOperationException("Channel has been already registered in an other case");
+
             var recvChannelOperation = new RecvChannelOperation(channel, _evt, action.GetMethodInfo(), action.Target);
             _channelOperations.Add(recvChannelOperation);
         }
 
         internal void AddSend<T>(Channel<T> channel, object msg)
         {
+            if (_channelOperations.Any(co => co.Channel == channel))
+                throw new InvalidOperationException("Channel has been already registered in an other case");
+
             var sendChannelOperation = new SendChannelOperation(channel, _evt, msg);
             _channelOperations.Add(sendChannelOperation);
         }
@@ -116,8 +122,11 @@ namespace GoSharp.Impl
 
             if (firedChannelOperation != null)
             {
-                var firedRecvChannelOperation = firedChannelOperation as RecvChannelOperation;
-                firedRecvChannelOperation?.ExecuteAction();
+                if (!firedChannelOperation.Channel.IsClosed)
+                {
+                    var firedRecvChannelOperation = firedChannelOperation as RecvChannelOperation;
+                    firedRecvChannelOperation?.ExecuteAction();
+                }
             }
         }
 

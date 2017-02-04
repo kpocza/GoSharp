@@ -35,5 +35,14 @@ namespace GoSharp.Impl
 
             return false;
         }
+
+        internal void DequeueNotifyAll()
+        {
+            TransferQueueItem tqi;
+            while (TryDequeue(out tqi))
+            {
+                tqi.ChannelOperation.Notify();
+            }
+        }
     }
 }

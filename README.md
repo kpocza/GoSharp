@@ -42,11 +42,8 @@ For more examples and detailed explanation [go here](docs/examples.md).
 
 TODO:
 
-- Channel input validation
-- Select input validation
-- Timer, ticker
 - Select timeout support
+- Select close behaviour fine tuning
 - Nuget package
 - Performance docs
-
 

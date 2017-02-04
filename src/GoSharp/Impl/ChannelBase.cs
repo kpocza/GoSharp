@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GoSharp.Impl
 {
-    public class ChannelBase
+    public abstract class ChannelBase
     {
         private readonly TransferQueue _readerQueue;
         private readonly TransferQueue _writerQueue;
@@ -162,20 +162,11 @@ namespace GoSharp.Impl
             Lock();
             _isClosed = true;
 
-            TransferQueueItem tqi;
-            while (_readerQueue.TryDequeue(out tqi))
-            {
-                tqi.ChannelOperation.Notify();
-            }
-
-            while (_writerQueue.TryDequeue(out tqi))
-            {
-                tqi.ChannelOperation.Notify();
-            }
+            _readerQueue.DequeueNotifyAll();
+            _writerQueue.DequeueNotifyAll();
 
             Unlock();
         }
-
 
         internal bool SendFast(SendChannelOperation sendChannelOperation, Action unlock)
         {
@@ -227,6 +218,29 @@ namespace GoSharp.Impl
             return false;
         }
 
+
+        internal void YieldingSendFast(object msg)
+        {
+            Lock();
+
+            TransferQueueItem readerQueueItem;
+            if (_readerQueue.TryDequeue(out readerQueueItem))
+            {
+                Unlock();
+
+                ((RecvChannelOperation)readerQueueItem.ChannelOperation).Msg = msg;
+                readerQueueItem.ChannelOperation.Notify();
+                return;
+            }
+
+            if (IsBuffered && _msgQueue.Count < _queueSize)
+            {
+                _msgQueue.Enqueue(msg);
+            }
+
+            Unlock();
+        }
+
         internal void Enqueue(ChannelOperation channelOperation, SelectFireContext selectFireContext)
         {
             if (channelOperation is RecvChannelOperation)
@@ -238,6 +252,18 @@ namespace GoSharp.Impl
                 _writerQueue.Enqueue(new TransferQueueItem(channelOperation, selectFireContext));
             }
         }
+
+        internal void Reset()
+        {
+            Lock();
+
+            _readerQueue.DequeueNotifyAll();
+            _writerQueue.DequeueNotifyAll();
+            _msgQueue.Clear();            
+
+            Unlock();
+        }
+
 
         internal bool IsBuffered => _queueSize > 0;
 

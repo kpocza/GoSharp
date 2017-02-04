@@ -97,6 +97,5 @@ namespace GoSharp.Test
             startedEvent.WaitOne();
             Select.CaseRecv(channel, (a) => { });
         }
-
     }
 }

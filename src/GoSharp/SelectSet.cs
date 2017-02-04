@@ -15,7 +15,12 @@ namespace GoSharp
 
         public SelectSet CaseRecv<T>(Channel<T> channel, Action<T> action)
         {
-            if(channel.IsClosed)
+            if (channel == null)
+                throw new ArgumentNullException(nameof(channel));
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+
+            if (channel.IsClosed)
                 throw new ChannelClosedException();
 
             _selectLogic.AddRecv(channel, action);
@@ -24,6 +29,9 @@ namespace GoSharp
 
         public SelectSet CaseSend<T>(Channel<T> channel, T msg)
         {
+            if (channel == null)
+                throw new ArgumentNullException(nameof(channel));
+
             if (channel.IsClosed)
                 throw new ChannelClosedException();
 
@@ -33,12 +41,18 @@ namespace GoSharp
 
         public void Default(Action defaultAction)
         {
+            if (defaultAction == null)
+                throw new ArgumentNullException(nameof(defaultAction));
+
             _selectLogic.AddDefault(defaultAction);
             Go();
         }
 
         public async Task DefaultAsync(Action defaultAction)
         {
+            if (defaultAction == null)
+                throw new ArgumentNullException(nameof(defaultAction));
+
             _selectLogic.AddDefault(defaultAction);
             await GoAsync();
         }

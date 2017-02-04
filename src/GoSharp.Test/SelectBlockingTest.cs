@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GoSharp.Test
@@ -516,6 +518,66 @@ namespace GoSharp.Test
         }
 
         #endregion
+
+        #endregion
+
+        #region Input validation test
+        [TestMethod]
+        public void SelectRecvNullChannelTest()
+        {
+            Assert.ThrowsException<ArgumentNullException>(() => Select.CaseRecv<string>(null, _ => { }));
+        }
+
+        [TestMethod]
+        public void SelectRecvNullActionTest()
+        {
+            Assert.ThrowsException<ArgumentNullException>(() => Select.CaseRecv(Channel<string>.CreateNonBuffered(), null));
+        }
+
+        [TestMethod]
+        public void SelectSendNullChannelTest()
+        {
+            Assert.ThrowsException<ArgumentNullException>(() => Select.CaseSend(null, "a"));
+        }
+
+        [TestMethod]
+        public void SelectMultipleRegRecvTest()
+        {
+            var ch1 = Channel<int>.CreateNonBuffered();
+
+            var sel = Select.CaseRecv(ch1, _ => { });
+            Assert.ThrowsException<InvalidOperationException>(() => sel.CaseRecv(ch1, _ => { }));
+        }
+
+        [TestMethod]
+        public void SelectMultipleRegSendTest()
+        {
+            var ch1 = Channel<int>.CreateNonBuffered();
+
+            var sel = Select.CaseRecv(ch1, _ => { });
+            Assert.ThrowsException<InvalidOperationException>(() => sel.CaseSend(ch1, 1));
+        }
+
+        #endregion
+
+        #region Async test
+        [TestMethod]
+        public async Task SelectTestAsync()
+        {
+            var channel = Channel<int>.CreateBuffered(1);
+            var done = Channel<bool>.CreateNonBuffered();
+
+            int i = 2;
+            Go.Run(async () =>
+            {
+                await Select.CaseRecv(channel, a => i = a).GoAsync();
+                await Select.CaseSend(done, true).GoAsync();
+            });
+            await Select.CaseSend(channel, 1).DefaultAsync(() => i = 3);
+            await Select.CaseRecv(done, _ => { }).GoAsync();
+
+            Assert.AreEqual(1, i);
+        }
 
         #endregion
     }
