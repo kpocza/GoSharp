@@ -1,6 +1,6 @@
 ﻿namespace GoSharp.Impl
 {
-    internal class TransferQueueItem
+    internal sealed class TransferQueueItem
     { 
         internal ChannelOperation ChannelOperation { get; private set; }
 

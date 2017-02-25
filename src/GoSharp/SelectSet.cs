@@ -4,7 +4,7 @@ using GoSharp.Impl;
 
 namespace GoSharp
 {
-    public class SelectSet
+    public sealed class SelectSet
     {
         private readonly SelectLogic _selectLogic;
 

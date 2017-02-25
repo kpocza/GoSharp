@@ -2,7 +2,7 @@
 
 namespace GoSharp.Impl
 {
-    internal class CompletionEvent
+    internal sealed class CompletionEvent
     {
         private readonly TaskCompletionSource<bool> _tcs = new TaskCompletionSource<bool>();
 

@@ -4,15 +4,14 @@
     {
         internal ChannelBase Channel { get; private set; }
 
-        protected readonly object _target;
+        internal object Msg { get; set; }
 
         protected readonly CompletionEvent _evt;
 
-        internal ChannelOperation(ChannelBase channel, CompletionEvent evt,  object target)
+        internal ChannelOperation(ChannelBase channel, CompletionEvent evt)
         {
             Channel = channel;
             _evt = evt;
-            _target = target;
         }
 
         internal void Notify()

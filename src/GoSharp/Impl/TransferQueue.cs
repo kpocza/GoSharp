@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace GoSharp.Impl
 {
-    internal class TransferQueue
+    internal sealed class TransferQueue
     {
         private readonly Queue<TransferQueueItem> _transferQueue;
 

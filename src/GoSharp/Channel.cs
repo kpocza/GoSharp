@@ -34,9 +34,9 @@ namespace GoSharp
             return (T) RecvCore();
         }
 
-        public async Task<bool> SendAsync(T msg)
+        public Task<bool> SendAsync(T msg)
         {
-            return await SendCoreAsync(msg);
+            return SendCoreAsync(msg);
         }
 
         public async Task<T> RecvAsync()

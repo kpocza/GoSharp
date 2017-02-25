@@ -49,7 +49,7 @@ namespace GoSharp.Impl
             {
                 Unlock();
 
-                ((RecvChannelOperation)readerQueueItem.ChannelOperation).Msg = msg;
+                readerQueueItem.ChannelOperation.Msg = msg;
                 readerQueueItem.ChannelOperation.Notify();
                 return true;
             }
@@ -86,7 +86,7 @@ namespace GoSharp.Impl
             if (_writerQueue.TryDequeue(out writerQueueItem))
             {
                 Unlock();
-                var msg = ((SendChannelOperation)writerQueueItem.ChannelOperation).Msg;
+                var msg = writerQueueItem.ChannelOperation.Msg;
 
                 writerQueueItem.ChannelOperation.Notify();
 
@@ -174,8 +174,7 @@ namespace GoSharp.Impl
             if (_readerQueue.TryDequeue(out readerQueueItem))
             {
                 unlock();
-
-                ((RecvChannelOperation)readerQueueItem.ChannelOperation).Msg = sendChannelOperation.Msg;
+                readerQueueItem.ChannelOperation.Msg = sendChannelOperation.Msg;
 
                 readerQueueItem.ChannelOperation.Notify();
                 return true;
@@ -198,10 +197,9 @@ namespace GoSharp.Impl
             if (_writerQueue.TryDequeue(out writerQueueItem))
             {
                 unlock();
-                recvChannelOperation.Msg = ((SendChannelOperation)writerQueueItem.ChannelOperation).Msg;
+                recvChannelOperation.Msg = writerQueueItem.ChannelOperation.Msg;
 
                 writerQueueItem.ChannelOperation.Notify();
-
                 return true;
             }
 
@@ -211,13 +209,11 @@ namespace GoSharp.Impl
                 unlock();
 
                 recvChannelOperation.Msg = msg;
-
                 return true;
             }
 
             return false;
         }
-
 
         internal void YieldingSendFast(object msg)
         {
@@ -228,7 +224,7 @@ namespace GoSharp.Impl
             {
                 Unlock();
 
-                ((RecvChannelOperation)readerQueueItem.ChannelOperation).Msg = msg;
+                readerQueueItem.ChannelOperation.Msg = msg;
                 readerQueueItem.ChannelOperation.Notify();
                 return;
             }
@@ -263,7 +259,6 @@ namespace GoSharp.Impl
 
             Unlock();
         }
-
 
         internal bool IsBuffered => _queueSize > 0;
 

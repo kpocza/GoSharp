@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace GoSharp.Impl
@@ -25,7 +24,7 @@ namespace GoSharp.Impl
             if(_channelOperations.Any(co => co.Channel == channel))
                 throw new InvalidOperationException("Channel has been already registered in an other case");
 
-            var recvChannelOperation = new RecvChannelOperation(channel, _evt, action.GetMethodInfo(), action.Target);
+            var recvChannelOperation = new RecvChannelOperation(channel, _evt, msg => action((T)msg));
             _channelOperations.Add(recvChannelOperation);
         }
 
@@ -78,7 +77,8 @@ namespace GoSharp.Impl
             if (_channelOperations.All(c => c.Channel.IsClosed))
             {
                 UnlockAllChannels();
-                _defaultAction?.Invoke();
+                if (_defaultAction != null)
+                    _defaultAction();
                 return;
             }
 

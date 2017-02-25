@@ -2,7 +2,7 @@
 
 namespace GoSharp
 {
-    public class ChannelClosedException : Exception
+    public sealed class ChannelClosedException : Exception
     {
         public ChannelClosedException() : base("The channel is closed")
         {

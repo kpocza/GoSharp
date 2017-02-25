@@ -1,6 +1,6 @@
 ﻿namespace GoSharp.Impl
 {
-    internal class SelectFireContext
+    internal sealed class SelectFireContext
     {
         internal TransferQueueItem Fired;
     }

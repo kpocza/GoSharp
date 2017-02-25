@@ -67,9 +67,9 @@ namespace GoSharp.Impl
             return _channel.Recv();
         }
 
-        public async Task<DateTime> RecvAsync()
+        public Task<DateTime> RecvAsync()
         {
-            return await _channel.RecvAsync();
+            return _channel.RecvAsync();
         }
 
         public IEnumerable<DateTime> Range => _channel.Range;

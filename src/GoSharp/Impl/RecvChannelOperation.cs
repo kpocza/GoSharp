@@ -1,26 +1,24 @@
-﻿using System.Reflection;
+﻿using System;
 
 namespace GoSharp.Impl
 {
     internal sealed class RecvChannelOperation : ChannelOperation
     {
-        private readonly MethodInfo _action;
+        private readonly Action<object> _action;
 
-        internal object Msg { get; set; }
-
-        internal RecvChannelOperation(ChannelBase channel, CompletionEvent evt, MethodInfo action, object target): base(channel, evt, target)
+        internal RecvChannelOperation(ChannelBase channel, CompletionEvent evt, Action<object> action): base(channel, evt)
         {
             _action = action;
         }
 
-        internal RecvChannelOperation(ChannelBase channel, CompletionEvent evt) : base(channel, evt, null)
+        internal RecvChannelOperation(ChannelBase channel, CompletionEvent evt) : base(channel, evt)
         {
             _action = null;
         }
 
         internal void ExecuteAction()
         {
-            _action.Invoke(_target, new[] {Msg});
+            _action(Msg);
         }
     }
 }
