@@ -39,32 +39,44 @@ namespace GoSharp
             return this;
         }
 
-        public void Default(Action defaultAction)
+        public Task GoAsync()
         {
-            if (defaultAction == null)
-                throw new ArgumentNullException(nameof(defaultAction));
-
-            _selectLogic.AddDefault(defaultAction);
-            Go();
+            return _selectLogic.GoAsync();
         }
 
-        public async Task DefaultAsync(Action defaultAction)
+        public Task DefaultAsync(Action defaultAction)
         {
             if (defaultAction == null)
                 throw new ArgumentNullException(nameof(defaultAction));
 
             _selectLogic.AddDefault(defaultAction);
-            await GoAsync();
+            return GoAsync();
+        }
+
+        public Task TimeoutAsync(TimeSpan timeout, Action timeoutAction)
+        {
+            if (timeout.TotalMilliseconds < 1)
+                throw new ArgumentOutOfRangeException(nameof(timeout));
+            if (timeoutAction == null)
+                throw new ArgumentNullException(nameof(timeoutAction));
+
+            _selectLogic.AddTimeout(timeout, timeoutAction);
+            return GoAsync();
+        }
+
+        public void Default(Action defaultAction)
+        {
+            DefaultAsync(defaultAction).Wait();
+        }
+
+        public void Timeout(TimeSpan timeout, Action timeoutAction)
+        {
+            TimeoutAsync(timeout, timeoutAction).Wait();
         }
 
         public void Go()
         {
-            _selectLogic.Go();
-        }
-
-        public async Task GoAsync()
-        {
-            await _selectLogic.GoAsync();
+            GoAsync().Wait();
         }
     }
 }

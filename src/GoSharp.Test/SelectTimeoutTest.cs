@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -7,26 +8,65 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace GoSharp.Test
 {
     [TestClass]
-    public class SelectNonBlockingTest
+    public class SelectTimeoutTest
     {
         #region Non buffered tests
 
         #region ExecDefault
 
         [TestMethod]
-        public void ExecDefaultNonBuffered()
+        public void ExecTimeoutNonBuffered()
         {
             var channel = Channel<int>.CreateNonBuffered();
 
             int a = 0;
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 10; i++)
             {
                 Select
                     .CaseSend(channel, i)
-                    .Default(() => { a++; });
+                    .Timeout(TimeSpan.FromMilliseconds(1), () => { a++; });
             }
 
-            Assert.AreEqual(1000, a);
+            Assert.AreEqual(10, a);
+        }
+
+        [TestMethod]
+        public void ExecTimeoutFireDataNonBuffered()
+        {
+            var channel = Channel<int>.CreateNonBuffered();
+
+            var thread = new System.Threading.Thread(() => { System.Threading.Thread.Sleep(5);
+                                                               channel.Recv();
+            });
+            int a = 0;
+            thread.Start();
+            Stopwatch sw = Stopwatch.StartNew();
+            Select
+                .CaseSend(channel, 1)
+                .Timeout(TimeSpan.FromMilliseconds(100), () => { a = 1; });
+            var elapsed = sw.Elapsed;
+            Assert.AreEqual(0, a);
+            Assert.IsTrue(elapsed < TimeSpan.FromMilliseconds(80));
+        }
+
+        [TestMethod]
+        public void ExecTimeoutFireTimeoutNonBuffered()
+        {
+            var channel = Channel<int>.CreateNonBuffered();
+
+            var thread = new System.Threading.Thread(() => {
+                System.Threading.Thread.Sleep(100);
+                channel.Recv();
+            });
+            int a = 0;
+            thread.Start();
+            Stopwatch sw = Stopwatch.StartNew();
+            Select
+                .CaseSend(channel, 1)
+                .Timeout(TimeSpan.FromMilliseconds(5), () => { a = 1; });
+            var elapsed = sw.Elapsed;
+            Assert.AreEqual(1, a);
+            Assert.IsTrue(elapsed < TimeSpan.FromMilliseconds(80));
         }
 
         #endregion
@@ -45,7 +85,7 @@ namespace GoSharp.Test
             {
                 Select
                     .CaseRecv(channel, a => items.Add(a))
-                    .Default(() => { });
+                    .Timeout(TimeSpan.FromMilliseconds(1), () => { });
             });
 
             Assert.IsTrue(Enumerable.Range(1, 1000).SequenceEqual(items));
@@ -65,7 +105,7 @@ namespace GoSharp.Test
             {
                 Select
                     .CaseRecv(channel, a => items.Add(a))
-                    .Default(() => { });
+                    .Timeout(TimeSpan.FromMilliseconds(1), () => { });
             });
 
             items.Sort();
@@ -88,7 +128,7 @@ namespace GoSharp.Test
                 Select
                     .CaseRecv(channel1, a => items.Add(a))
                     .CaseRecv(channel2, a => items.Add(a))
-                    .Default(() => { });
+                    .Timeout(TimeSpan.FromMilliseconds(1), () => { });
             });
 
             items.Sort();
@@ -114,7 +154,7 @@ namespace GoSharp.Test
             {
                 Select
                     .CaseSend(channel, i++)
-                    .Default(() => { });
+                    .Timeout(TimeSpan.FromMilliseconds(1), () => { });
             });
 
             ThreadHelper.Wait(thread1);
@@ -138,7 +178,7 @@ namespace GoSharp.Test
             {
                 Select
                     .CaseSend(channel, i++)
-                    .Default(() => { });
+                    .Timeout(TimeSpan.FromMilliseconds(1), () => { });
             });
 
             ThreadHelper.Wait(thread1, thread2);
@@ -166,7 +206,7 @@ namespace GoSharp.Test
                 Select
                     .CaseSend(channel1, i++)
                     .CaseSend(channel2, i++)
-                    .Default(() => { });
+                    .Timeout(TimeSpan.FromMilliseconds(1), () => { });
             });
 
             ThreadHelper.Wait(thread1, thread2);
@@ -186,19 +226,19 @@ namespace GoSharp.Test
         #region ExecDefault
 
         [TestMethod]
-        public void ExecDefaultBuffered()
+        public void ExecTimeoutBuffered()
         {
-            var channel = Channel<int>.CreateBuffered(500);
+            var channel = Channel<int>.CreateBuffered(50);
 
             int a = 0;
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 60; i++)
             {
                 Select
                     .CaseSend(channel, i)
-                    .Default(() => { a++; });
+                    .Timeout(TimeSpan.FromMilliseconds(1), () => { a++; });
             }
 
-            Assert.AreEqual(500, a);
+            Assert.AreEqual(10, a);
         }
 
         #endregion
@@ -217,7 +257,7 @@ namespace GoSharp.Test
             {
                 Select
                     .CaseRecv(channel, a => items.Add(a))
-                    .Default(() => { });
+                    .Timeout(TimeSpan.FromMilliseconds(1), () => { });
             });
 
             items.Sort();
@@ -238,7 +278,7 @@ namespace GoSharp.Test
             {
                 Select
                     .CaseRecv(channel, a => items.Add(a))
-                    .Default(() => { });
+                    .Timeout(TimeSpan.FromMilliseconds(1), () => { });
             });
 
             items.Sort();
@@ -261,7 +301,7 @@ namespace GoSharp.Test
                 Select
                     .CaseRecv(channel1, a => items.Add(a))
                     .CaseRecv(channel2, a => items.Add(a))
-                    .Default(() => { });
+                    .Timeout(TimeSpan.FromMilliseconds(1), () => { });
             });
 
             items.Sort();
@@ -287,7 +327,7 @@ namespace GoSharp.Test
             {
                 Select
                     .CaseSend(channel, i++)
-                    .Default(() => { });
+                    .Timeout(TimeSpan.FromMilliseconds(1), () => { });
             });
 
             ThreadHelper.Wait(thread1);
@@ -311,7 +351,7 @@ namespace GoSharp.Test
             {
                 Select
                     .CaseSend(channel, i++)
-                    .Default(() => { });
+                    .Timeout(TimeSpan.FromMilliseconds(1), () => { });
             });
 
             ThreadHelper.Wait(thread1, thread2);
@@ -339,7 +379,7 @@ namespace GoSharp.Test
                 Select
                     .CaseSend(channel1, i++)
                     .CaseSend(channel2, i++)
-                    .Default(() => { });
+                    .Timeout(TimeSpan.FromMilliseconds(1), () => { });
             });
 
             ThreadHelper.Wait(thread1, thread2);
@@ -355,16 +395,23 @@ namespace GoSharp.Test
         #endregion
 
         #region Input validation tests
+
         [TestMethod]
-        public void SelectNullDefaultActionTest()
+        public void SelectNullTimeoutActionTest()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => Select.CaseSend(Channel<string>.CreateNonBuffered(), "a").Default(null));
+            Assert.ThrowsException<ArgumentNullException>(() => Select.CaseSend(Channel<string>.CreateNonBuffered(), "a").Timeout(TimeSpan.FromSeconds(1), null));
         }
 
         [TestMethod]
-        public async Task SelectNullDefaultAsyncActionTest()
+        public void SelectInvalidTimespanTest()
         {
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(async () => await Select.CaseSend(Channel<string>.CreateNonBuffered(), "a").DefaultAsync(null));
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => Select.CaseSend(Channel<string>.CreateNonBuffered(), "a").Timeout(TimeSpan.FromSeconds(0), () => { }));
+        }
+
+        [TestMethod]
+        public async Task SelectNullTimeoutAsyncActionTest()
+        {
+            await Assert.ThrowsExceptionAsync<ArgumentNullException>(async () => await Select.CaseSend(Channel<string>.CreateNonBuffered(), "a").TimeoutAsync(TimeSpan.FromSeconds(1), null));
         }
 
         #endregion

@@ -45,7 +45,6 @@ namespace GoSharp.Impl
                 lock (_lock)
                 {
                     DropTimer();
-                    _coreTimer = null;
                 }
                 _channel.Reset();
             }
@@ -81,6 +80,9 @@ namespace GoSharp.Impl
                 _coreTimer.Change(-1, -1);
                 _coreTimer.Dispose();
             }
+            _coreTimer = null;
         }
+
+        internal Channel<DateTime> Channel => _channel;
     }
 }

@@ -17,7 +17,6 @@ namespace GoSharp
                 lock (_lock)
                 {
                     DropTimer();
-                    _coreTimer = null;
                 }
             }, null, _timeout, TimeSpan.Zero);
         }

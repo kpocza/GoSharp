@@ -521,7 +521,7 @@ namespace GoSharp.Test
 
         #endregion
 
-        #region Input validation test
+        #region Input validation tests
         [TestMethod]
         public void SelectRecvNullChannelTest()
         {

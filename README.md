@@ -42,7 +42,7 @@ For more examples and detailed explanation [go here](docs/examples.md).
 
 TODO:
 
-- Select timeout support
+- Select timeout documentation
 - Select close behaviour fine tuning
 - Nuget package
 - Performance docs

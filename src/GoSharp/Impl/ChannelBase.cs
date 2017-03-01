@@ -86,10 +86,9 @@ namespace GoSharp.Impl
             if (_writerQueue.TryDequeue(out writerQueueItem))
             {
                 Unlock();
+
                 var msg = writerQueueItem.ChannelOperation.Msg;
-
                 writerQueueItem.ChannelOperation.Notify();
-
                 return msg;
             }
 
@@ -174,8 +173,8 @@ namespace GoSharp.Impl
             if (_readerQueue.TryDequeue(out readerQueueItem))
             {
                 unlock();
-                readerQueueItem.ChannelOperation.Msg = sendChannelOperation.Msg;
 
+                readerQueueItem.ChannelOperation.Msg = sendChannelOperation.Msg;
                 readerQueueItem.ChannelOperation.Notify();
                 return true;
             }
@@ -197,8 +196,8 @@ namespace GoSharp.Impl
             if (_writerQueue.TryDequeue(out writerQueueItem))
             {
                 unlock();
-                recvChannelOperation.Msg = writerQueueItem.ChannelOperation.Msg;
 
+                recvChannelOperation.Msg = writerQueueItem.ChannelOperation.Msg;
                 writerQueueItem.ChannelOperation.Notify();
                 return true;
             }

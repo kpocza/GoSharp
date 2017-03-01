@@ -11,6 +11,8 @@ namespace GoSharp.Impl
         private readonly CompletionEvent _evt;
         private readonly SelectFireContext _selectFireContext;
         private Action _defaultAction;
+        private Timer _timer;
+        private Action _timeoutAction;
 
         internal SelectLogic()
         {
@@ -37,9 +39,15 @@ namespace GoSharp.Impl
             _channelOperations.Add(sendChannelOperation);
         }
 
-        internal void Go()
+        internal void AddDefault(Action defaultAction)
         {
-            GoAsync().Wait();
+            _defaultAction = defaultAction;
+        }
+
+        internal void AddTimeout(TimeSpan timeout, Action timeoutAction)
+        {
+            _timer = new Timer(timeout);
+            _timeoutAction = timeoutAction;
         }
 
         internal async Task GoAsync()
@@ -74,18 +82,10 @@ namespace GoSharp.Impl
                 }
             }
 
-            if (_channelOperations.All(c => c.Channel.IsClosed))
+            if (_defaultAction != null || _channelOperations.All(c => c.Channel.IsClosed))
             {
                 UnlockAllChannels();
-                if (_defaultAction != null)
-                    _defaultAction();
-                return;
-            }
-
-            if (_defaultAction != null)
-            {
-                UnlockAllChannels();
-                _defaultAction();
+                _defaultAction?.Invoke();
                 return;
             }
 
@@ -111,12 +111,19 @@ namespace GoSharp.Impl
             }
 
             UnlockAllChannels();
+
+            if (_timer != null)
+            {
+                var timerChannelOperation = new RecvChannelOperation(_timer.Channel, _evt, _ => _timeoutAction());
+                _channelOperations.Add(timerChannelOperation);
+                _timer.Channel.Enqueue(timerChannelOperation, _selectFireContext);
+                _timer.Start();
+            }
+
             if (_channelOperations.All(c => c.Channel.IsClosed))
-                throw new ChannelClosedException();
+                return;
 
             await _evt.WaitAsync();
-
-            // TODO: handle closure, timeout
 
             var firedChannelOperation = _selectFireContext.Fired.ChannelOperation;
 
@@ -128,6 +135,8 @@ namespace GoSharp.Impl
                     firedRecvChannelOperation?.ExecuteAction();
                 }
             }
+
+            _timer?.Close();
         }
 
         private void LockAllChannels()
@@ -158,11 +167,6 @@ namespace GoSharp.Impl
                 _channelOperations[k] = _channelOperations[n];
                 _channelOperations[n] = value;
             }
-        }
-
-        public void AddDefault(Action defaultAction)
-        {
-            _defaultAction = defaultAction;
         }
     }
 }
