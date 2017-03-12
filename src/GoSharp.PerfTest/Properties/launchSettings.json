@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "GoSharp.PerfTest": {
+      "commandName": "Project"
+    }
+  }
+}

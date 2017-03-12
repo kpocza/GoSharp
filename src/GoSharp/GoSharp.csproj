@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.4</TargetFramework>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Version>0.1.0</Version>
+    <Authors>Krisztián Pócza</Authors>
+    <Company />
+    <Product>Go#</Product>
+    <PackageId>GoSharp</PackageId>
+    <Description>Go# library provides a mini embedded DSL for C# that mimics Go concurrency statements like channels and select.</Description>
+    <PackageLicenseUrl>https://github.com/kpocza/GoSharp/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/kpocza/goSharp</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/kpocza/goSharp</RepositoryUrl>
+  </PropertyGroup>
+
+</Project>
