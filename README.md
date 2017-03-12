@@ -44,6 +44,6 @@ TODO:
 
 - Select timeout documentation
 - Select close behaviour fine tuning
-- Nuget package
 - Performance docs
+- NuGet targeting???
 
