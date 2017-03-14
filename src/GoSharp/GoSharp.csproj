@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.2</TargetFramework>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <Version>0.1.1</Version>
     <Authors>Krisztián Pócza</Authors>
     <Company />
@@ -12,6 +12,10 @@
     <PackageLicenseUrl>https://github.com/kpocza/GoSharp/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/kpocza/goSharp</PackageProjectUrl>
     <RepositoryUrl>https://github.com/kpocza/goSharp</RepositoryUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;NETSTANDARD1_2,NETSTANDARD</DefineConstants>
   </PropertyGroup>
 
 </Project>

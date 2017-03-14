@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+    <metadata>
+        <id>GoSharp</id>
+        <version>0.1.2</version>
+        <title>Go#</title>
+        <description>Go# library provides a mini embedded DSL for C# that mimics Go concurrency statements like channels and select.</description>
+        <authors>Krisztián Pócza</authors>
+        <language>en-US</language>
+        <tags>go, channel, select, concurrency</tags>
+        <projectUrl>https://github.com/kpocza/GoSharp</projectUrl>
+        <licenseUrl>https://github.com/kpocza/GoSharp/blob/master/LICENSE</licenseUrl>
+<!--        <repository url="https://github.com/kpocza/GoSharp" /> -->
+        <dependencies>
+            <group targetFramework=".NETFramework4.5.2" />
+            <group targetFramework=".NETStandard1.2">
+                 <dependency id="NETStandard.Library" version="1.6.1" exclude="Build,Analyzers" />
+            </group>
+        </dependencies>
+    </metadata>
+</package>
