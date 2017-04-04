@@ -339,7 +339,7 @@ func closeChannel() {
 }
 ```
 
-In G# we have to catch the ChannelClosedException to avoid program termination:
+In Go# we have to catch the ChannelClosedException to avoid program termination:
 
 
 ```c#
@@ -398,7 +398,7 @@ func rangeChannel() {
 }
 ```
 
-In G# the Range operator won't throw ChannelClosedException but will stop the enumeration gracefully:
+In Go# the Range operator won't throw ChannelClosedException but will stop the enumeration gracefully:
 
 
 ```c#
@@ -419,6 +419,138 @@ private async Task rangeChannel()
         await messages.SendAsync(i);
     }
     messages.Close();
+}
+```
+
+
+
+Every timer is elapsing only once after the specified timeout:
+
+
+```go
+func timerEx() {
+	timer:= time.NewTimer(time.Second)
+	fmt.Println("waiting for the timer to expired")
+	<- timer.C
+	fmt.Println("Timer expired")
+}
+```
+
+This is how it looks like in Go# (the only real difference is that the timer has to be started):
+
+
+```c#
+private async Task timer()
+{
+    var timer = new Timer(TimeSpan.FromSeconds(1));
+    timer.Start();
+    Console.WriteLine("Waiting for timer to expire");
+    await timer.RecvAsync();
+    Console.WriteLine("Timer expired");
+}
+```
+
+
+
+Tickers fire multiple times periodically after the given timeout:
+
+
+```go
+func tickerEx() {
+	ticker:= time.NewTicker(time.Millisecond * 100)
+	go func() {
+		for t:= range ticker.C {
+			fmt.Println("Tick at", t)
+		}
+	}()
+
+	time.Sleep(time.Second)
+	ticker.Stop()
+}
+```
+
+Tickers have to be also started but the code structure generally looks similar to the Go version:
+
+
+```c#
+private async Task ticker()
+{
+     var ticker = new Ticker(TimeSpan.FromMilliseconds(100));
+     Go.Run(() =>
+     {
+         foreach (var t in ticker.Range)
+         {
+             Console.WriteLine($"Tick at: {t}");
+         }
+     });
+     ticker.Start();
+
+     await Task.Delay(TimeSpan.FromSeconds(1));
+     ticker.Stop();
+}
+```
+
+
+
+Select statement also supports timeout. If none of the channels/cases fire in the given timeout then the timeout case will do so:
+
+
+```go
+func timeoutSelect() {
+	chan1 := make(chan int)
+	chan2 := make(chan string)
+
+	go func() {
+		time.Sleep(time.Second)
+		chan1 <- 1
+	}()
+
+	go func() {
+		time.Sleep(time.Second * 2)
+		chan2 <- "two"
+	}()
+
+	for i := 0; i < 2; i++ {
+		select {
+			case msg1:= <- chan1:
+				fmt.Println("recvd:", msg1)
+			case msg2:= <- chan2:
+				fmt.Println("recvd:", msg2)
+			case <- time.After(time.Millisecond * 100):
+				fmt.Println("timeout")
+		}
+	}
+}
+```
+
+The Go# implementation is almost the same:
+
+
+```c#
+private async Task timeoutSimpleSelect()
+{
+     var chan1 = Channel<int>.CreateNonBuffered();
+     var chan2 = Channel<string>.CreateNonBuffered();
+
+     Go.Run(async () =>
+     {
+         await Task.Delay(TimeSpan.FromSeconds(1));
+         await chan1.SendAsync(1);
+     });
+
+     Go.Run(async () =>
+     {
+         await Task.Delay(TimeSpan.FromSeconds(2));
+         await chan2.SendAsync("two");
+     });
+
+     for (int i = 0; i < 2; i++)
+     {
+         await Select
+             .CaseRecv(chan1, msg1 => Console.WriteLine($"recvd: {msg1}"))
+             .CaseRecv(chan2, msg2 => Console.WriteLine($"recvd: {msg2}"))
+             .TimeoutAsync(TimeSpan.FromSeconds(0.4), () => Console.WriteLine("timeout"));
+     }
 }
 ```
 

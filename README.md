@@ -42,8 +42,6 @@ For more examples and detailed explanation [go here](docs/examples.md).
 
 TODO:
 
-- Select timeout documentation
 - Select close behaviour fine tuning
 - Performance docs
-- NuGet targeting???
 

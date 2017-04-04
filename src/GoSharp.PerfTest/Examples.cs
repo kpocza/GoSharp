@@ -18,6 +18,9 @@ namespace GoSharp.PerfTest
             defSelect().Wait();
             closeChannel().Wait();
             rangeChannel().Wait();
+            timer().Wait();
+            ticker().Wait();
+            timeoutSimpleSelect().Wait();
         }
 
         private async Task sendRecv()
@@ -206,6 +209,57 @@ namespace GoSharp.PerfTest
                 await messages.SendAsync(i);
             }
             messages.Close();
+        }
+
+        private async Task timer()
+        {
+            var timer = new Timer(TimeSpan.FromSeconds(1));
+            timer.Start();
+            Console.WriteLine("Waiting for timer to expire");
+            await timer.RecvAsync();
+            Console.WriteLine("Timer expired");
+        }
+
+        private async Task ticker()
+        {
+            var ticker = new Ticker(TimeSpan.FromMilliseconds(100));
+            Go.Run(() =>
+            {
+                foreach (var t in ticker.Range)
+                {
+                    Console.WriteLine($"Tick at: {t}");
+                }
+            });
+            ticker.Start();
+
+            await Task.Delay(TimeSpan.FromSeconds(1));
+            ticker.Stop();
+        }
+
+        private async Task timeoutSimpleSelect()
+        {
+            var chan1 = Channel<int>.CreateNonBuffered();
+            var chan2 = Channel<string>.CreateNonBuffered();
+
+            Go.Run(async () =>
+            {
+                await Task.Delay(TimeSpan.FromSeconds(1));
+                await chan1.SendAsync(1);
+            });
+
+            Go.Run(async () =>
+            {
+                await Task.Delay(TimeSpan.FromSeconds(2));
+                await chan2.SendAsync("two");
+            });
+
+            for (int i = 0; i < 2; i++)
+            {
+                await Select
+                    .CaseRecv(chan1, msg1 => Console.WriteLine($"recvd: {msg1}"))
+                    .CaseRecv(chan2, msg2 => Console.WriteLine($"recvd: {msg2}"))
+                    .TimeoutAsync(TimeSpan.FromSeconds(0.4), () => Console.WriteLine("timeout"));
+            }
         }
     }
 }

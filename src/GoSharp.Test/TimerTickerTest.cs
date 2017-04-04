@@ -19,7 +19,7 @@ namespace GoSharp.Test
             timer.Start();
 
             var now = timer.Recv();
-            Assert.IsTrue(IsInDiff(start, now, 19, 20));
+            Assert.IsTrue(IsInDiff(start, now, 18, 22));
         }
 
         [TestMethod]
@@ -52,7 +52,7 @@ namespace GoSharp.Test
             timer.Start();
 
             var now = await timer.RecvAsync();
-            Assert.IsTrue(IsInDiff(start, now, 19, 20));
+            Assert.IsTrue(IsInDiff(start, now, 18, 22));
         }
 
         [TestMethod]
@@ -68,7 +68,7 @@ namespace GoSharp.Test
 
             var now = timer.Recv();
             timer.Close();
-            Assert.IsTrue(IsInDiff(start, now, 19, 20));
+            Assert.IsTrue(IsInDiff(start, now, 18, 22));
         }
 
         [TestMethod]
@@ -83,7 +83,7 @@ namespace GoSharp.Test
 
             var now = timer.Recv();
             timer.Close();
-            Assert.IsTrue(IsInDiff(start, now, 19, 20));
+            Assert.IsTrue(IsInDiff(start, now, 18, 22));
         }
 
         #endregion
@@ -100,7 +100,7 @@ namespace GoSharp.Test
 
             var now = ticker.Recv();
             ticker.Close();
-            Assert.IsTrue(IsInDiff(start, now, 19, 20));
+            Assert.IsTrue(IsInDiff(start, now, 18, 22));
         }
 
         [TestMethod]
@@ -112,17 +112,17 @@ namespace GoSharp.Test
             ticker.Start();
 
             var now = ticker.Recv();
-            Assert.IsTrue(IsInDiff(start, now, 19, 20));
+            Assert.IsTrue(IsInDiff(start, now, 18, 22));
             var last = now;
             now = ticker.Recv();
-            Assert.IsTrue(IsInDiff(last, now, 19, 20));
+            Assert.IsTrue(IsInDiff(last, now, 18, 22));
             last = now;
             now = ticker.Recv();
-            Assert.IsTrue(IsInDiff(last, now, 19, 20));
+            Assert.IsTrue(IsInDiff(last, now, 18, 22));
             last = now;
             now = ticker.Recv();
             ticker.Close();
-            Assert.IsTrue(IsInDiff(last, now, 19, 20));
+            Assert.IsTrue(IsInDiff(last, now, 18, 22));
         }
 
         [TestMethod]
@@ -134,16 +134,16 @@ namespace GoSharp.Test
             ticker.Start();
 
             var now = ticker.Recv();
-            Assert.IsTrue(IsInDiff(start, now, 19, 20));
+            Assert.IsTrue(IsInDiff(start, now, 18, 22));
             Thread.Sleep(21);
             Thread.Sleep(21);
             var last = now;
             now = ticker.Recv();
-            Assert.IsTrue(IsInDiff(last, now, 19, 20));
+            Assert.IsTrue(IsInDiff(last, now, 18, 22));
             last = now;
             now = ticker.Recv();
             ticker.Close();
-            Assert.IsTrue(IsInDiff(last, now, 19, 20));
+            Assert.IsTrue(IsInDiff(last, now, 18, 22));
         }
 
         [TestMethod]
@@ -193,7 +193,7 @@ namespace GoSharp.Test
 
             var now = ticker.Recv();
             ticker.Close();
-            Assert.IsTrue(IsInDiff(start, now, 19, 20));
+            Assert.IsTrue(IsInDiff(start, now, 18, 22));
         }
 
         [TestMethod]
@@ -208,7 +208,7 @@ namespace GoSharp.Test
 
             var now = ticker.Recv();
             ticker.Close();
-            Assert.IsTrue(IsInDiff(start, now, 19, 20));
+            Assert.IsTrue(IsInDiff(start, now, 18, 22));
         }
 
         #endregion

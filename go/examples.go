@@ -12,6 +12,9 @@ func main() {
 	defSelect()
 	closeChannel()
 	rangeChannel()
+	timerEx()
+	tickerEx()
+	timeoutSelect()
 }
 
 func ex1SendRecv() {
@@ -149,3 +152,48 @@ func rangeChannel() {
 	close(messages)
 }
 
+func timerEx() {
+	timer:= time.NewTimer(time.Second)
+	fmt.Println("waiting for the timer to expired")
+	<- timer.C
+	fmt.Println("Timer expired")
+}
+
+func tickerEx() {
+	ticker:= time.NewTicker(time.Millisecond * 100)
+	go func() {
+		for t:= range ticker.C {
+			fmt.Println("Tick at", t)
+		}
+	}()
+
+	time.Sleep(time.Second)
+	ticker.Stop()
+}
+
+func timeoutSelect() {
+	chan1 := make(chan int)
+	chan2 := make(chan string)
+
+	go func() {
+		time.Sleep(time.Second)
+		chan1 <- 1
+	}()
+
+	go func() {
+		time.Sleep(time.Second * 2)
+		chan2 <- "two"
+	}()
+
+	for i := 0; i < 2; i++ {
+		select {
+			case msg1:= <- chan1:
+				fmt.Println("recvd:", msg1)
+			case msg2:= <- chan2:
+				fmt.Println("recvd:", msg2)
+			case <- time.After(time.Millisecond * 100):
+				fmt.Println("timeout")
+		}
+	}
+	
+}
