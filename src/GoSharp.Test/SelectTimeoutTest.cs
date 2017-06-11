@@ -183,7 +183,6 @@ namespace GoSharp.Test
 
             ThreadHelper.Wait(thread1, thread2);
 
-            items.Sort();
             Assert.IsTrue(items.Distinct().Count() == items.Count);
         }
 
@@ -260,7 +259,6 @@ namespace GoSharp.Test
                     .Timeout(TimeSpan.FromMilliseconds(1), () => { });
             });
 
-            items.Sort();
             Assert.IsTrue(Enumerable.Range(1, 1000).SequenceEqual(items));
         }
 
@@ -356,7 +354,6 @@ namespace GoSharp.Test
 
             ThreadHelper.Wait(thread1, thread2);
 
-            items.Sort();
             Assert.IsTrue(items.Distinct().Count() == items.Count);
         }
 

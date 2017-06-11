@@ -32,7 +32,6 @@ namespace GoSharp.Test
             var receiver1 = ThreadHelper.CreateReceiverThread(channel, 1000, items);
             ThreadHelper.StartAndWait(sender1, receiver1);
 
-            items.Sort();
             Assert.IsTrue(Enumerable.Range(1, 1000).SequenceEqual(items));
         }
 

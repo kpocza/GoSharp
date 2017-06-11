@@ -9,7 +9,7 @@ namespace GoSharp.Impl
 
         internal TransferQueue()
         {
-            _transferQueue = new Queue<TransferQueueItem>(100);
+            _transferQueue = new Queue<TransferQueueItem>(10);
         }
 
         internal void Enqueue(TransferQueueItem transferQueueItem)
@@ -38,8 +38,7 @@ namespace GoSharp.Impl
 
         internal void DequeueNotifyAll()
         {
-            TransferQueueItem tqi;
-            while (TryDequeue(out tqi))
+            while (TryDequeue(out TransferQueueItem tqi))
             {
                 tqi.ChannelOperation.Notify();
             }

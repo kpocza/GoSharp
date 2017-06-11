@@ -44,8 +44,7 @@ namespace GoSharp.Impl
 
             Lock();
 
-            TransferQueueItem readerQueueItem;
-            if (_readerQueue.TryDequeue(out readerQueueItem))
+            if (_readerQueue.TryDequeue(out TransferQueueItem readerQueueItem))
             {
                 Unlock();
 
@@ -82,21 +81,28 @@ namespace GoSharp.Impl
 
             Lock();
 
-            TransferQueueItem writerQueueItem;
-            if (_writerQueue.TryDequeue(out writerQueueItem))
+            if (IsBuffered && _msgQueue.Any())
+            {
+                var msg = _msgQueue.Dequeue();
+
+                if (_msgQueue.Count + 1 == _queueSize && _writerQueue.TryDequeue(out TransferQueueItem writerQueueItemFullMsgQueue))
+                {
+                    var msgFullMsgQueue = writerQueueItemFullMsgQueue.ChannelOperation.Msg;
+                    writerQueueItemFullMsgQueue.ChannelOperation.Notify();
+                    _msgQueue.Enqueue(msgFullMsgQueue);
+                }
+
+                Unlock();
+
+                return msg;
+            }
+
+            if (_writerQueue.TryDequeue(out TransferQueueItem writerQueueItem))
             {
                 Unlock();
 
                 var msg = writerQueueItem.ChannelOperation.Msg;
                 writerQueueItem.ChannelOperation.Notify();
-                return msg;
-            }
-
-            if (IsBuffered && _msgQueue.Any())
-            {
-                var msg = _msgQueue.Dequeue();
-                Unlock();
-
                 return msg;
             }
 
@@ -169,8 +175,7 @@ namespace GoSharp.Impl
 
         internal bool SendFast(SendChannelOperation sendChannelOperation, Action unlock)
         {
-            TransferQueueItem readerQueueItem;
-            if (_readerQueue.TryDequeue(out readerQueueItem))
+            if (_readerQueue.TryDequeue(out TransferQueueItem readerQueueItem))
             {
                 unlock();
 
@@ -192,22 +197,28 @@ namespace GoSharp.Impl
 
         internal bool ReceiveFast(RecvChannelOperation recvChannelOperation, Action unlock)
         {
-            TransferQueueItem writerQueueItem;
-            if (_writerQueue.TryDequeue(out writerQueueItem))
+            if (IsBuffered && _msgQueue.Any())
+            {
+                var msg = _msgQueue.Dequeue();
+
+                if (_msgQueue.Count + 1 == _queueSize && _writerQueue.TryDequeue(out TransferQueueItem writerQueueItemFullMsgQueue))
+                {
+                    var msgFullMsgQueue = writerQueueItemFullMsgQueue.ChannelOperation.Msg;
+                    writerQueueItemFullMsgQueue.ChannelOperation.Notify();
+                    _msgQueue.Enqueue(msgFullMsgQueue);
+                }
+                unlock();
+
+                recvChannelOperation.Msg = msg;
+                return true;
+            }
+
+            if (_writerQueue.TryDequeue(out TransferQueueItem writerQueueItem))
             {
                 unlock();
 
                 recvChannelOperation.Msg = writerQueueItem.ChannelOperation.Msg;
                 writerQueueItem.ChannelOperation.Notify();
-                return true;
-            }
-
-            if (IsBuffered && _msgQueue.Any())
-            {
-                var msg = _msgQueue.Dequeue();
-                unlock();
-
-                recvChannelOperation.Msg = msg;
                 return true;
             }
 
@@ -218,8 +229,7 @@ namespace GoSharp.Impl
         {
             Lock();
 
-            TransferQueueItem readerQueueItem;
-            if (_readerQueue.TryDequeue(out readerQueueItem))
+            if (_readerQueue.TryDequeue(out TransferQueueItem readerQueueItem))
             {
                 Unlock();
 

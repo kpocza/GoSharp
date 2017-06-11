@@ -322,8 +322,6 @@ namespace GoSharp.Test
                     .Go();
             });
 
-            items.Sort();
-
             Assert.IsTrue(Enumerable.Range(1, 1000).SequenceEqual(items));
         }
 
@@ -425,13 +423,10 @@ namespace GoSharp.Test
 
             ThreadHelper.Start(thread2);
 
-
             Select
                 .CaseSend(channel1, 1)
                 .CaseSend(channel2, 2)
                 .Go();
-
-            items.Sort();
 
             ThreadHelper.Wait(thread2);
 
@@ -457,7 +452,6 @@ namespace GoSharp.Test
             });
 
             ThreadHelper.Wait(thread1);
-            items.Sort();
 
             Assert.IsTrue(Enumerable.Range(1, 1000).SequenceEqual(items));
         }

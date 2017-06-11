@@ -31,8 +31,6 @@ namespace GoSharp.Test
                 items.Add(item);
             }
 
-            items.Sort();
-
             Assert.IsTrue(Enumerable.Range(1, 1000).SequenceEqual(items));
         }
 
@@ -58,8 +56,6 @@ namespace GoSharp.Test
             {
                 items.Add(item);
             }
-
-            items.Sort();
 
             Assert.IsTrue(Enumerable.Range(1, 1000).SequenceEqual(items));
         }
