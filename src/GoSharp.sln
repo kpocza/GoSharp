@@ -7,11 +7,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{28EB7FF9-C30
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2D1D84E9-52F0-48CD-A2BF-E5B0E3A62B3F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoSharp", "src\GoSharp\GoSharp.csproj", "{A6C53D36-98D9-416F-BD3B-1692ED030DFC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoSharp", "GoSharp\GoSharp.csproj", "{A6C53D36-98D9-416F-BD3B-1692ED030DFC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoSharp.Test", "src\GoSharp.Test\GoSharp.Test.csproj", "{AB6D04C4-8558-4245-9ACE-0F01F2ACA260}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoSharp.Test", "GoSharp.Test\GoSharp.Test.csproj", "{AB6D04C4-8558-4245-9ACE-0F01F2ACA260}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoSharp.PerfTest", "src\GoSharp.PerfTest\GoSharp.PerfTest.csproj", "{DF5D0AE3-F4C0-4321-86B2-670486F49C98}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoSharp.PerfTest", "GoSharp.PerfTest\GoSharp.PerfTest.csproj", "{DF5D0AE3-F4C0-4321-86B2-670486F49C98}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

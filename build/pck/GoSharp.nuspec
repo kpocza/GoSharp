@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
     <metadata>
         <id>GoSharp</id>
-        <version>0.2.0</version>
+        <version>0.3.0</version>
         <title>Go#</title>
         <description>Go# library provides a mini embedded DSL for C# that mimics Go concurrency statements like channels and select.</description>
         <authors>Krisztián Pócza</authors>
@@ -16,7 +16,8 @@
             <group targetFramework=".NETStandard1.2">
                  <dependency id="NETStandard.Library" version="1.6.1" exclude="Build,Analyzers" />
             </group>
+            <group targetFramework=".NETStandard2.0" />
         </dependencies>
-	<releaseNotes>Now with strong message ordering guarantee</releaseNotes>
+	<releaseNotes>Support for .NET Standard 2.0</releaseNotes>
     </metadata>
 </package>

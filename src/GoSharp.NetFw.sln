@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoSharp", "src\GoSharp\GoSharp.NetFw.csproj", "{26B8C0BC-EDA4-4220-9B9A-FBB75763438E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoSharp", "GoSharp\GoSharp.NetFw.csproj", "{26B8C0BC-EDA4-4220-9B9A-FBB75763438E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoSharp.PerfTest", "src\GoSharp.PerfTest\GoSharp.PerfTest.NetFw.csproj", "{E2697480-BAB0-4FD1-BBD2-10EF5162BCA0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoSharp.PerfTest", "GoSharp.PerfTest\GoSharp.PerfTest.NetFw.csproj", "{E2697480-BAB0-4FD1-BBD2-10EF5162BCA0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoSharp.Test", "src\GoSharp.Test\GoSharp.Test.NetFw.csproj", "{5260D695-70AE-4353-B376-C67CC4F2D0F9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoSharp.Test", "GoSharp.Test\GoSharp.Test.NetFw.csproj", "{5260D695-70AE-4353-B376-C67CC4F2D0F9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
