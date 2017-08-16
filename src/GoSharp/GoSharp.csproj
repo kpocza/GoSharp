@@ -3,15 +3,15 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-    <Version>0.1.1</Version>
+    <Version>0.3.0</Version>
     <Authors>Krisztián Pócza</Authors>
     <Company />
     <Product>Go#</Product>
     <PackageId>GoSharp</PackageId>
     <Description>Go# library provides a mini embedded DSL for C# that mimics Go concurrency statements like channels and select.</Description>
     <PackageLicenseUrl>https://github.com/kpocza/GoSharp/blob/master/LICENSE</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/kpocza/goSharp</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/kpocza/goSharp</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/kpocza/GoSharp</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/kpocza/GoSharp</RepositoryUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

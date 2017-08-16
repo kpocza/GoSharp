@@ -13,6 +13,8 @@
     <ApplicationIcon />
     <OutputTypeEx>exe</OutputTypeEx>
     <StartupObject />
+    <RootNamespace>GoSharp.PerfTest</RootNamespace>
+    <AssemblyName>GoSharp.PerfTest</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
