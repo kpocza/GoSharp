@@ -58,9 +58,8 @@ namespace GoSharp.Impl
 
             foreach (var channelOperation in _channelOperations)
             {
-                if (channelOperation is RecvChannelOperation)
+                if (channelOperation is RecvChannelOperation recvChannelOperation)
                 {
-                    var recvChannelOperation = (RecvChannelOperation)channelOperation;
                     var channel = channelOperation.Channel;
 
                     if (channel.ReceiveFast(recvChannelOperation, UnlockAllChannels))
@@ -94,9 +93,8 @@ namespace GoSharp.Impl
                 if (channelOperation.Channel.IsClosed)
                     continue;
 
-                if (channelOperation is RecvChannelOperation)
+                if (channelOperation is RecvChannelOperation recvChannelOperation)
                 {
-                    var recvChannelOperation = (RecvChannelOperation)channelOperation;
                     var channel = channelOperation.Channel;
 
                     channel.Enqueue(recvChannelOperation, _selectFireContext);

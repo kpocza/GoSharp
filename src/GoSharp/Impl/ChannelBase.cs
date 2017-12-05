@@ -74,7 +74,7 @@ namespace GoSharp.Impl
             return true;
         }
 
-        protected async Task<object> RecvCoreAsync()
+        protected async Task<T> RecvCoreAsync<T>()
         {
             if (_isClosed)
                 throw new ChannelClosedException();
@@ -94,7 +94,7 @@ namespace GoSharp.Impl
 
                 Unlock();
 
-                return msg;
+                return (T)msg;
             }
 
             if (_writerQueue.TryDequeue(out TransferQueueItem writerQueueItem))
@@ -103,7 +103,7 @@ namespace GoSharp.Impl
 
                 var msg = writerQueueItem.ChannelOperation.Msg;
                 writerQueueItem.ChannelOperation.Notify();
-                return msg;
+                return (T)msg;
             }
 
             var evt = new CompletionEvent();
@@ -117,7 +117,7 @@ namespace GoSharp.Impl
             if (_isClosed)
                 throw new ChannelClosedException();
 
-            return recvOperation.Msg;
+            return (T)recvOperation.Msg;
         }
 
 
@@ -137,7 +137,7 @@ namespace GoSharp.Impl
         {
             try
             {
-                return RecvCoreAsync().Result;
+                return RecvCoreAsync<object>().Result;
             }
             catch (AggregateException aggregateException)
             {

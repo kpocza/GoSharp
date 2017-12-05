@@ -39,9 +39,9 @@ namespace GoSharp
             return SendCoreAsync(msg);
         }
 
-        public async Task<T> RecvAsync()
+        public Task<T> RecvAsync()
         {
-            return (T)await RecvCoreAsync();
+            return RecvCoreAsync<T>();
         }
 
         public IEnumerable<T> Range
