@@ -1,7 +1,9 @@
 # Go\# project
 Go-like DSL for C#
 
-This library provides a mini embedded DSL for C# that mimics Go concurrency statements like channels and select.
+This library provides a mini embedded DSL for C# that mimics Go concurrency statements like channels, select, timers and tickers.
+
+The official NuGet package called GoSharp is hosted by nuget.org and supports .NET Standard 2.0 (.NET Core 2.0, .NET Framework 4.6.1), .NET Standard 1.2 (.NET Core 1.0, .NET Framework 4.5.1) and .NET Framework 4.5.2.
 
 For example the following Go code
 
@@ -18,7 +20,7 @@ func sendRecv() {
 }
 ```
 
-looks like this in C# powered by Go#:
+looks like this way in C# powered by Go#:
 
 
 ```c#

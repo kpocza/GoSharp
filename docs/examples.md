@@ -1,8 +1,8 @@
 # Go\# examples
 
-Examples shown below are put here from [go/examples.go](../go/examples.go) and [src/GoSharp.PerfTest/Examples.cs](../src/GoSharp.PerfTest/Examples.cs) in Go and C#, respectively. Most of the samples originate from [http://gobyexample.com](http://gobyexample.com).
+Examples shown below are from [go/examples.go](../go/examples.go) and [src/GoSharp.PerfTest/Examples.cs](../src/GoSharp.PerfTest/Examples.cs) in Go and C#, respectively. Most of the samples originate from [http://gobyexample.com](http://gobyexample.com).
 
-The following Go code fragment creates a non-buffered channel, start a goroutine that send "ping" to the channel while in the same time the main function receives this message and prints it. The receiver is waiting for the message for unlimited amount of time while the sender is doing the same to be able to send the message.
+The following Go code fragment creates a non-buffered channel, starts a goroutine that sends "ping" to the channel while in the same time the main function receives this message and prints it. The receiver is waiting for the message for unlimited amount of time while the sender is doing the same to be able to send the message.
 
 ```go
 func sendRecv() {
@@ -53,7 +53,7 @@ private void sendRecvSync()
 
 
 
-Go supports buffered channels where a given number of items can be sent to the channel without blocking the sender afterwards these messages are received:
+Go supports buffered channels where a given number of items can be sent to the channel without blocking the sender. Afterwards these messages are received:
 
 
 ```go
@@ -104,7 +104,7 @@ func chanSync() {
 }
 ```
 
-Similar version using Go#:
+Similar logic in Go#:
 
 ```c#
 private async Task chanSync()
@@ -339,7 +339,7 @@ func closeChannel() {
 }
 ```
 
-In Go# we have to catch the ChannelClosedException to avoid program termination:
+In Go# we have to catch the ChannelClosedException to avoid unexpected program termination:
 
 
 ```c#
