@@ -70,13 +70,12 @@ namespace GoSharp.Impl
                 }
                 else
                 {
-                    var sendChannelOperation = (SendChannelOperation)channelOperation;
                     var channel = channelOperation.Channel;
 
                     if (channel.IsClosed)
                         continue;
 
-                    if (channel.SendFast(sendChannelOperation, UnlockAllChannels))
+                    if (channel.SendFast((SendChannelOperation)channelOperation, UnlockAllChannels))
                         return;
                 }
             }
@@ -101,10 +100,9 @@ namespace GoSharp.Impl
                 }
                 else
                 {
-                    var sendChannelOperation = (SendChannelOperation)channelOperation;
                     var channel = channelOperation.Channel;
 
-                    channel.Enqueue(sendChannelOperation, _selectFireContext);
+                    channel.Enqueue((SendChannelOperation)channelOperation, _selectFireContext);
                 }
             }
 

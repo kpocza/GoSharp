@@ -145,7 +145,7 @@ namespace GoSharp.Impl
             }
         }
 
-        protected IEnumerable<object> RangeCore()
+        protected IEnumerable<T> RangeCore<T>()
         {
             while (!IsClosed)
             {
@@ -158,7 +158,7 @@ namespace GoSharp.Impl
                 {
                     yield break;
                 }
-                yield return item;
+                yield return (T)item;
             }
         }
 

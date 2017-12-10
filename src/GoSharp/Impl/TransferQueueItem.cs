@@ -4,7 +4,7 @@
     { 
         internal ChannelOperation ChannelOperation { get; private set; }
 
-        internal SelectFireContext SelectFireContext;
+        internal SelectFireContext SelectFireContext { get; private set; }
 
         internal TransferQueueItem(ChannelOperation channelOperation)
         {

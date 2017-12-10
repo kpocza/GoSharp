@@ -44,16 +44,7 @@ namespace GoSharp
             return RecvCoreAsync<T>();
         }
 
-        public IEnumerable<T> Range
-        {
-            get
-            {
-                foreach (var item in RangeCore())
-                {
-                    yield return (T) item;
-                }
-            }
-        }
+        public IEnumerable<T> Range => RangeCore<T>();
 
         public void Close()
         {
