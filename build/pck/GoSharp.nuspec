@@ -18,6 +18,6 @@
             </group>
             <group targetFramework=".NETStandard2.0" />
         </dependencies>
-	<releaseNotes>High-level opererations: merge, zip, buffer, broadcast</releaseNotes>
+	<releaseNotes>High-level operations: merge, zip, buffer, broadcast</releaseNotes>
     </metadata>
 </package>
