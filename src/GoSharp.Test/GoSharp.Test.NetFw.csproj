@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="BufferedChannelTest.cs" />
     <Compile Include="CloseBehaviourTest.cs" />
+    <Compile Include="GoTest.cs" />
     <Compile Include="NonBufferedChannelTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RangeTest.cs" />

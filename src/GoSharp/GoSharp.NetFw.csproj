@@ -46,6 +46,7 @@
     <Compile Include="Impl\ChannelBase.cs" />
     <Compile Include="Impl\ChannelOperation.cs" />
     <Compile Include="Impl\CompletionEvent.cs" />
+    <Compile Include="Impl\GoLogic.cs" />
     <Compile Include="Impl\RecvChannelOperation.cs" />
     <Compile Include="Impl\SchedulingBase.cs" />
     <Compile Include="Impl\SelectFireContext.cs" />
