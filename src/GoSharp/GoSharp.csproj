@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-    <Version>0.5.0</Version>
+    <Version>0.6.0</Version>
     <Authors>Krisztián Pócza</Authors>
     <Company />
     <Product>Go#</Product>

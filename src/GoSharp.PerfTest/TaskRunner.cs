@@ -121,7 +121,7 @@ namespace GoSharp.PerfTest
             cde.Wait();
 
             stopWatch.Stop();
-            Console.WriteLine($"Sender tsk: {senderTaskCount}, items/tsk: {sendItemCount}; Recv tsk: {recvTaskCount}, items/tsk: {recvItemCount}: {stopWatch.ElapsedMilliseconds} ms");
+            Console.WriteLine($"Sender task: {senderTaskCount}, items/task: {sendItemCount}; Recv task: {recvTaskCount}, items/task: {recvItemCount}: {stopWatch.ElapsedMilliseconds} ms");
 
             if (cntSend != cntRecv || cntSend != senderTaskCount * sendItemCount)
                 throw new Exception("channel error");
@@ -183,7 +183,7 @@ namespace GoSharp.PerfTest
 
             stopWatch.Stop();
 
-            Console.WriteLine($"Sender tsk: {senderTaskCount}, items/tsk: {sendItemCount}; Recv tsk: {recvTaskCount}, items/tsk: {recvItemCount}: {stopWatch.ElapsedMilliseconds} ms");
+            Console.WriteLine($"Sender task: {senderTaskCount}, items/task: {sendItemCount}; Recv task: {recvTaskCount}, items/task: {recvItemCount}: {stopWatch.ElapsedMilliseconds} ms");
 
             if (cntSend != cntRecv || cntSend != senderTaskCount * sendItemCount)
                 throw new Exception("channel error");
@@ -194,62 +194,62 @@ namespace GoSharp.PerfTest
     //~~~~~~~~~~~
 
     //Non-buffered:
-    //Sender tsk: 1, items/tsk: 200000; Recv tsk: 1, items/tsk: 200000: 145 ms
-    //Sender tsk: 2, items/tsk: 100000; Recv tsk: 1, items/tsk: 200000: 130 ms
-    //Sender tsk: 1, items/tsk: 200000; Recv tsk: 2, items/tsk: 100000: 131 ms
-    //Sender tsk: 10, items/tsk: 50000; Recv tsk: 10, items/tsk: 50000: 339 ms
-    //Sender tsk: 50, items/tsk: 10000; Recv tsk: 50, items/tsk: 10000: 283 ms
-    //Sender tsk: 100, items/tsk: 10000; Recv tsk: 100, items/tsk: 10000: 550 ms
-    //Sender tsk: 10, items/tsk: 100000; Recv tsk: 100, items/tsk: 10000: 590 ms
-    //Sender tsk: 100, items/tsk: 10000; Recv tsk: 10, items/tsk: 100000: 633 ms
-    //Sender tsk: 500, items/tsk: 1000; Recv tsk: 500, items/tsk: 1000: 324 ms
-    //Sender tsk: 1000, items/tsk: 1000; Recv tsk: 1000, items/tsk: 1000: 644 ms
-    //Sender tsk: 10, items/tsk: 100000; Recv tsk: 1000, items/tsk: 1000: 588 ms
-    //Sender tsk: 1000, items/tsk: 1000; Recv tsk: 10, items/tsk: 100000: 610 ms
-    //Sender tsk: 2000, items/tsk: 1000; Recv tsk: 2000, items/tsk: 1000: 1386 ms
+    //Sender task: 1, items/task: 200000; Recv task: 1, items/task: 200000: 148 ms
+    //Sender task: 2, items/task: 100000; Recv task: 1, items/task: 200000: 134 ms
+    //Sender task: 1, items/task: 200000; Recv task: 2, items/task: 100000: 131 ms
+    //Sender task: 10, items/task: 50000; Recv task: 10, items/task: 50000: 339 ms
+    //Sender task: 50, items/task: 10000; Recv task: 50, items/task: 10000: 281 ms
+    //Sender task: 100, items/task: 10000; Recv task: 100, items/task: 10000: 584 ms
+    //Sender task: 10, items/task: 100000; Recv task: 100, items/task: 10000: 554 ms
+    //Sender task: 100, items/task: 10000; Recv task: 10, items/task: 100000: 573 ms
+    //Sender task: 500, items/task: 1000; Recv task: 500, items/task: 1000: 309 ms
+    //Sender task: 1000, items/task: 1000; Recv task: 1000, items/task: 1000: 599 ms
+    //Sender task: 10, items/task: 100000; Recv task: 1000, items/task: 1000: 644 ms
+    //Sender task: 1000, items/task: 1000; Recv task: 10, items/task: 100000: 627 ms
+    //Sender task: 2000, items/task: 1000; Recv task: 2000, items/task: 1000: 1394 ms
 
     //Buffered:
-    //Sender tsk: 1, items/tsk: 200000; Recv tsk: 1, items/tsk: 200000: 111 ms
-    //Sender tsk: 2, items/tsk: 100000; Recv tsk: 1, items/tsk: 200000: 140 ms
-    //Sender tsk: 1, items/tsk: 200000; Recv tsk: 2, items/tsk: 100000: 168 ms
-    //Sender tsk: 10, items/tsk: 50000; Recv tsk: 10, items/tsk: 50000: 326 ms
-    //Sender tsk: 50, items/tsk: 10000; Recv tsk: 50, items/tsk: 10000: 382 ms
-    //Sender tsk: 100, items/tsk: 10000; Recv tsk: 100, items/tsk: 10000: 790 ms
-    //Sender tsk: 10, items/tsk: 100000; Recv tsk: 100, items/tsk: 10000: 728 ms
-    //Sender tsk: 100, items/tsk: 10000; Recv tsk: 10, items/tsk: 100000: 713 ms
-    //Sender tsk: 500, items/tsk: 1000; Recv tsk: 500, items/tsk: 1000: 368 ms
-    //Sender tsk: 1000, items/tsk: 1000; Recv tsk: 1000, items/tsk: 1000: 719 ms
-    //Sender tsk: 10, items/tsk: 100000; Recv tsk: 1000, items/tsk: 1000: 714 ms
-    //Sender tsk: 1000, items/tsk: 1000; Recv tsk: 10, items/tsk: 100000: 635 ms
-    //Sender tsk: 2000, items/tsk: 1000; Recv tsk: 2000, items/tsk: 1000: 1596 ms
+    //Sender task: 1, items/task: 200000; Recv task: 1, items/task: 200000: 97 ms
+    //Sender task: 2, items/task: 100000; Recv task: 1, items/task: 200000: 121 ms
+    //Sender task: 1, items/task: 200000; Recv task: 2, items/task: 100000: 152 ms
+    //Sender task: 10, items/task: 50000; Recv task: 10, items/task: 50000: 318 ms
+    //Sender task: 50, items/task: 10000; Recv task: 50, items/task: 10000: 354 ms
+    //Sender task: 100, items/task: 10000; Recv task: 100, items/task: 10000: 666 ms
+    //Sender task: 10, items/task: 100000; Recv task: 100, items/task: 10000: 671 ms
+    //Sender task: 100, items/task: 10000; Recv task: 10, items/task: 100000: 583 ms
+    //Sender task: 500, items/task: 1000; Recv task: 500, items/task: 1000: 370 ms
+    //Sender task: 1000, items/task: 1000; Recv task: 1000, items/task: 1000: 705 ms
+    //Sender task: 10, items/task: 100000; Recv task: 1000, items/task: 1000: 686 ms
+    //Sender task: 1000, items/task: 1000; Recv task: 10, items/task: 100000: 644 ms
+    //Sender task: 2000, items/task: 1000; Recv task: 2000, items/task: 1000: 1637 ms
 
     //Select non-buffered:
-    //Sender tsk: 1, items/tsk: 100000; Recv tsk: 1, items/tsk: 100000: 709 ms
-    //Sender tsk: 2, items/tsk: 100000; Recv tsk: 1, items/tsk: 200000: 1383 ms
-    //Sender tsk: 1, items/tsk: 200000; Recv tsk: 2, items/tsk: 100000: 1504 ms
-    //Sender tsk: 10, items/tsk: 10000; Recv tsk: 10, items/tsk: 10000: 528 ms
-    //Sender tsk: 50, items/tsk: 2000; Recv tsk: 50, items/tsk: 2000: 543 ms
-    //Sender tsk: 100, items/tsk: 1000; Recv tsk: 100, items/tsk: 1000: 472 ms
-    //Sender tsk: 10, items/tsk: 10000; Recv tsk: 100, items/tsk: 1000: 486 ms
-    //Sender tsk: 100, items/tsk: 1000; Recv tsk: 10, items/tsk: 10000: 403 ms
-    //Sender tsk: 500, items/tsk: 250; Recv tsk: 500, items/tsk: 250: 856 ms
-    //Sender tsk: 1000, items/tsk: 100; Recv tsk: 1000, items/tsk: 100: 1105 ms
-    //Sender tsk: 10, items/tsk: 10000; Recv tsk: 1000, items/tsk: 100: 1089 ms
-    //Sender tsk: 1000, items/tsk: 100; Recv tsk: 10, items/tsk: 10000: 441 ms
-    //Sender tsk: 2000, items/tsk: 100; Recv tsk: 2000, items/tsk: 100: 3256 ms
+    //Sender task: 1, items/task: 100000; Recv task: 1, items/task: 100000: 698 ms
+    //Sender task: 2, items/task: 100000; Recv task: 1, items/task: 200000: 1353 ms
+    //Sender task: 1, items/task: 200000; Recv task: 2, items/task: 100000: 1465 ms
+    //Sender task: 10, items/task: 10000; Recv task: 10, items/task: 10000: 683 ms
+    //Sender task: 50, items/task: 2000; Recv task: 50, items/task: 2000: 506 ms
+    //Sender task: 100, items/task: 1000; Recv task: 100, items/task: 1000: 528 ms
+    //Sender task: 10, items/task: 10000; Recv task: 100, items/task: 1000: 458 ms
+    //Sender task: 100, items/task: 1000; Recv task: 10, items/task: 10000: 362 ms
+    //Sender task: 500, items/task: 250; Recv task: 500, items/task: 250: 862 ms
+    //Sender task: 1000, items/task: 100; Recv task: 1000, items/task: 100: 1035 ms
+    //Sender task: 10, items/task: 10000; Recv task: 1000, items/task: 100: 1031 ms
+    //Sender task: 1000, items/task: 100; Recv task: 10, items/task: 10000: 402 ms
+    //Sender task: 2000, items/task: 100; Recv task: 2000, items/task: 100: 3181 ms
 
     //Select buffered:
-    //Sender tsk: 1, items/tsk: 100000; Recv tsk: 1, items/tsk: 100000: 584 ms
-    //Sender tsk: 2, items/tsk: 100000; Recv tsk: 1, items/tsk: 200000: 1169 ms
-    //Sender tsk: 1, items/tsk: 200000; Recv tsk: 2, items/tsk: 100000: 1563 ms
-    //Sender tsk: 10, items/tsk: 10000; Recv tsk: 10, items/tsk: 10000: 521 ms
-    //Sender tsk: 50, items/tsk: 2000; Recv tsk: 50, items/tsk: 2000: 687 ms
-    //Sender tsk: 100, items/tsk: 1000; Recv tsk: 100, items/tsk: 1000: 573 ms
-    //Sender tsk: 10, items/tsk: 10000; Recv tsk: 100, items/tsk: 1000: 594 ms
-    //Sender tsk: 100, items/tsk: 1000; Recv tsk: 10, items/tsk: 10000: 518 ms
-    //Sender tsk: 500, items/tsk: 250; Recv tsk: 500, items/tsk: 250: 1026 ms
-    //Sender tsk: 1000, items/tsk: 100; Recv tsk: 1000, items/tsk: 100: 1217 ms
-    //Sender tsk: 10, items/tsk: 10000; Recv tsk: 1000, items/tsk: 100: 1162 ms
-    //Sender tsk: 1000, items/tsk: 100; Recv tsk: 10, items/tsk: 10000: 399 ms
-    //Sender tsk: 2000, items/tsk: 100; Recv tsk: 2000, items/tsk: 100: 3376 ms
+    //Sender task: 1, items/task: 100000; Recv task: 1, items/task: 100000: 572 ms
+    //Sender task: 2, items/task: 100000; Recv task: 1, items/task: 200000: 1131 ms
+    //Sender task: 1, items/task: 200000; Recv task: 2, items/task: 100000: 1525 ms
+    //Sender task: 10, items/task: 10000; Recv task: 10, items/task: 10000: 551 ms
+    //Sender task: 50, items/task: 2000; Recv task: 50, items/task: 2000: 649 ms
+    //Sender task: 100, items/task: 1000; Recv task: 100, items/task: 1000: 570 ms
+    //Sender task: 10, items/task: 10000; Recv task: 100, items/task: 1000: 557 ms
+    //Sender task: 100, items/task: 1000; Recv task: 10, items/task: 10000: 526 ms
+    //Sender task: 500, items/task: 250; Recv task: 500, items/task: 250: 964 ms
+    //Sender task: 1000, items/task: 100; Recv task: 1000, items/task: 100: 1164 ms
+    //Sender task: 10, items/task: 10000; Recv task: 1000, items/task: 100: 1194 ms
+    //Sender task: 1000, items/task: 100; Recv task: 10, items/task: 10000: 504 ms
+    //Sender task: 2000, items/task: 100; Recv task: 2000, items/task: 100: 3410 ms
 }
