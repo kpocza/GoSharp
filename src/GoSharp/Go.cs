@@ -8,9 +8,9 @@ namespace GoSharp
 {
     public static class Go
     {
-        public static void Run(Action action)
+        public static Task Run(Action action)
         {
-            Task.Run(action);
+            return Task.Run(action);
         }
 
         public static void Merge<T>(Channel<T> input1, Channel<T> input2, Channel<T> output)
