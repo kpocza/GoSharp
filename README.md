@@ -3,7 +3,9 @@ Go-like DSL for C#
 
 This library provides a mini embedded DSL for C# that mimics Go concurrency statements like channels, select, timers and tickers.
 
-The official NuGet package called GoSharp is hosted by nuget.org and supports .NET Standard 2.0 (.NET Core 2.0, .NET Framework 4.6.1), .NET Standard 1.2 (.NET Core 1.0, .NET Framework 4.5.1) and .NET Framework 4.5.2.
+In addition some higher level constructs (merge, zip, buffer, broadcast, pipeline, etc.) are also supported based on the core features of GoSharp.
+
+The official NuGet package called GoSharp is hosted by nuget.org and supports .NET Standard 2.0 (.NET Core 2.0, .NET Framework 4.6.1), .NET Standard 1.2 (.NET Core 1.0, .NET Framework 4.5.1).
 
 For example the following Go code
 
@@ -40,10 +42,11 @@ private async Task sendRecv()
 
 For more examples and detailed explanation [go here](docs/examples.md).
 
-
+For examples of high-level constructs [go here](docs/exampleshl.md).
 
 TODO:
 
-- Select close behaviour fine tuning
-- Performance docs
+- More Pipeline features
+
+  ​
 
