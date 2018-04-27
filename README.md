@@ -5,7 +5,7 @@ This library provides a mini embedded DSL for C# that mimics Go concurrency stat
 
 In addition some higher level constructs (merge, zip, buffer, broadcast, pipeline, etc.) are also supported based on the core features of GoSharp.
 
-The official NuGet package called GoSharp is hosted by nuget.org and supports .NET Standard 2.0 (.NET Core 2.0, .NET Framework 4.6.1), .NET Standard 1.2 (.NET Core 1.0, .NET Framework 4.5.1).
+The official NuGet package called GoSharp is hosted by nuget.org and supports .NET Standard 2.0 (.NET Core 2.0, .NET Framework 4.6.1) and .NET Framework 4.5.2.
 
 For example the following Go code
 
