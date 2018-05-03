@@ -15,6 +15,6 @@
             <group targetFramework=".NETFramework4.5.2" />
             <group targetFramework=".NETStandard2.0" />
         </dependencies>
-	<releaseNotes>Discontinuing netstd1.2 support</releaseNotes>
+	<releaseNotes>Introducing pipeline, discontinuing netstd1.2 support</releaseNotes>
     </metadata>
 </package>
