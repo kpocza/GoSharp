@@ -1,0 +1,7 @@
+*.o
+lock
+demo4gosharp/*.dll
+demo4gosharp/*.pdb
+demo4gosharp/*.config
+demo4gosharp/*.json
+
